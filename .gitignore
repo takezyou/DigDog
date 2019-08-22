@@ -153,3 +153,4 @@ Temporary Items
 
 # Original
 config/k8s_config.yml
+config/ldap.yml
