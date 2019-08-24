@@ -10,7 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_08_22_144938) do
 
   create_table "users", force: :cascade do |t|
@@ -25,8 +24,5 @@ ActiveRecord::Schema.define(version: 2019_08_22_144938) do
     t.datetime "updated_at", null: false
     t.index ["username"], name: "index_users_on_username", unique: true
   end
-=======
-ActiveRecord::Schema.define(version: 0) do
->>>>>>> develop
 
 end
