@@ -10,6 +10,11 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <%= yield %>
+      <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link' %>
+    </div>
   </body>
 </html>
