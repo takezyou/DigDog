@@ -1,0 +1,34 @@
+<% @page_title = "Current Status" %>
+
+<div class="container">
+  <h1>Current Status</h1>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pods.each do |pod| %>
+        <tr>
+          <th><%= pod.metadata.name %></th>
+          <th><%= pod.status.phase %></th>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Create</h2>
+      <a class="btn  btn-primary" href="#" role="button">Create</a>
+    </div>
+    <div class="col-md-6">
+      <h2>Delete</h2>
+      <a class="btn  btn-primary" href="#" role="button">Delete</a>
+    </div>
+  </div>
+</div>
+<hr>

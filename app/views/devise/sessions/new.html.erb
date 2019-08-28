@@ -1,26 +1,25 @@
-<h2>Log in</h2>
+<div class="container" style="width: 100%; max-width: 330px; padding: 15px; margin: 0 auto;">
+  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :username %><br />
-    <%= f.text_field :username, autofocus: true %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <!-- ユーザー名 -->
+    <div class="form-group">
+      <%= f.text_field :username, :class => "form-control", :placeholder => "Username", required: true, autofocus: true %>
     </div>
-  <% end %>
+    <!-- ユーザー名 ここまで -->
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
+    <!-- パスワード -->
+    <div class="form-group">
+      <%= f.password_field :password, :class => "form-control", :placeholder => "Password", required: true, autocomplete: "off" %>
+    </div>
+    <!-- パスワード ここまで -->
 
-<%= render "devise/shared/links" %>
+    <!-- ログインボタン -->
+    <div class="actions">
+      <%= f.submit "Log in", :class => "btn btn-lg btn-primary btn-block" %>
+    </div>
+    <!-- ログインボタン ここまで -->
+
+    <% end %>
+  <%= render "devise/shared/links" %>
+</div>
