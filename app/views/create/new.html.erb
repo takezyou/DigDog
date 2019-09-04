@@ -3,7 +3,7 @@
     <!-- イメージ選択 -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.select :image, options_for_select(@repo), {label: "Image:"} %>
+        <%= f.select :image, options_for_select(@repo), {label: "Image："} %>
       </div>
     </div>
     <!-- イメージ選択 ここまで -->
@@ -11,7 +11,7 @@
     <!-- Podの名前 -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.text_field :name, {label: "Name:"}%>
+        <%= f.text_field :name, {label: "Name：", :required => true} %>
       </div>
     </div>
     <!-- Podの名前 ここまで -->
@@ -19,7 +19,7 @@
     <!-- Port -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.phone_field :port, {label: "Port:"}%>
+        <%= f.phone_field :port, {label: "Port：", :required => true}%>
       </div>
     </div>
     <!-- Port ここまで -->
