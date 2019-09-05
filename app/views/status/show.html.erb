@@ -2,28 +2,55 @@
 
 <div class="container">
   <h1>Current Status</h1>
-  <div class="table-responsive">
-    <table class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th>name</th>
-          <th>status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @pods.each do |pod| %>
-        <tr>
-          <th><%= pod.metadata.name %></th>
-          <th><%= pod.status.phase %></th>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-
+  <ul>
+    <h2><li>Pods</li></h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>name</th>
+            <th>status</th>
+            <th>IP address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pods.each do |pod| %>
+          <tr>
+            <th><%= pod.metadata.name %></th>
+            <th><%= pod.status.phase %></th>
+            <th><%= pod.status.podIP %></th>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <h2><li>Deployments</li></h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Replicas</th>
+            <th>Available Status</th>
+            <th>Processing Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @deployments.each do |deployment| %>
+          <tr>
+            <th><%= deployment.metadata.name %></th>
+            <th><%= deployment.status.replicas %></th>
+            <th><%= deployment.status.conditions[0].status %></th>
+            <th><%= deployment.status.conditions[1].status %></th>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </ul>
+  <hr>
   <div class="row">
     <div class="col-md-6">
       <h2>Create</h2>
-      <a class="btn  btn-primary" href="#" role="button">Create</a>
+      <%= link_to "Create", create_path, :class => "btn  btn-primary" %>
     </div>
     <div class="col-md-6">
       <h2>Delete</h2>
@@ -31,4 +58,3 @@
     </div>
   </div>
 </div>
-<hr>
