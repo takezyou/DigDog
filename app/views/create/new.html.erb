@@ -1,0 +1,29 @@
+<div class="container" style="width: 100%; max-width: 500px; padding: 15px; margin: 0 auto;">
+  <%= bootstrap_form_tag url: '/create/state' do |f|  %>
+    <!-- イメージ選択 -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.select :image, options_for_select(@repo), {label: "Image："} %>
+      </div>
+    </div>
+    <!-- イメージ選択 ここまで -->
+
+    <!-- Podの名前 -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.text_field :name, {label: "Name：", :required => true} %>
+      </div>
+    </div>
+    <!-- Podの名前 ここまで -->
+
+    <!-- Port -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.phone_field :port, {label: "Port：", :required => true}%>
+      </div>
+    </div>
+    <!-- Port ここまで -->
+
+    <%= f.submit "Create", class: "form-control btn-primary" %>
+  <% end %>
+</div>
