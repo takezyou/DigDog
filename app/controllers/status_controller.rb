@@ -32,7 +32,7 @@ class StatusController < ApplicationController
   def delete
     deployment = params[:deployment]
 
-    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
     @deploy = client.api('apps/v1').resource('deployments', namespace: 'student').delete("#{deployment}")
     @service = system("kubectl --namespace=student delete svc #{deployment}")
   end

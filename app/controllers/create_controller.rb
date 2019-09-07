@@ -15,7 +15,7 @@ class CreateController < ApplicationController
     name = params[:name]
     port = params[:port]
 
-    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
 
     resource = K8s::Resource.new(
       apiVersion: 'apps/v1',
@@ -25,7 +25,7 @@ class CreateController < ApplicationController
         namespace: 'student'
       },
       spec: {
-        replicas: 3,
+        replicas: 1,
         selector: {
           matchLabels: {
             app: "#{name}"
