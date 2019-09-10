@@ -3,6 +3,7 @@
     deployment:<%= params[:deployment] %>を削除しました<br>
     現在の状況は<%= link_to "こちら", status_show_path %>で確認してください。
   <% else %>
-
+    エラーが発生しました。<br>
+    詳しくはログを確認してください。
   <% end %>
 </div>
