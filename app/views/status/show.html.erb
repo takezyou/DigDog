@@ -4,26 +4,41 @@
   <h1>Current Status</h1>
   <ul>
     <h2><li>Pods</li></h2>
-    <div class="table-responsive">
-      <table class="table table-striped table-sm">
-        <thead>
-          <tr>
-            <th>name</th>
-            <th>status</th>
-            <th>IP address</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @pods.each do |pod| %>
-          <tr>
-            <th><%= pod.metadata.name %></th>
-            <th><%= pod.status.phase %></th>
-            <th><%= pod.status.podIP %></th>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+    <!-- podの状態 -->
+    <% if @pods.count == 0 %>
+      <div class="container">
+        <p>対象が存在しません</p>
+      </div>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>status</th>
+              <th>IP address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @pods.each do |pod| %>
+            <tr>
+              <th><%= pod.metadata.name %></th> <!-- pod名 -->
+              <th><%= pod.status.phase %></th> <!-- podの状態 -->
+              <th><%= pod.status.podIP %></th> <!--podのIPアドレス -->
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+    <!-- podの状態 ここまで -->
     <h2><li>Deployments</li></h2>
+    <!-- deploymentの状態-->
+    <% if @deployments.count == 0 %>
+      <div class="container">
+        <p>対象が存在しません</p>
+      </div>
+    <% else %>
     <div class="table-responsive">
       <table class="table table-striped table-sm">
         <thead>
@@ -38,31 +53,24 @@
         <tbody>
           <% @deployments.each do |deployment| %>
           <tr>
-            <th><%= deployment.metadata.name %></th>
-            <th><%= deployment.status.replicas %></th>
+            <th><%= deployment.metadata.name %></th> <!-- deployment名 -->
+            <th><%= deployment.status.replicas %></th> <!-- レプリカ数 -->
             <th><%= deployment.status.conditions[0].status %></th>
             <th><%= deployment.status.conditions[1].status %></th>
+            <!-- 削除ボタン -->
             <th>
               <%= bootstrap_form_tag url: "/delete" do |f| %>
                 <%= f.hidden_field "deployment", :value => "#{deployment.metadata.name}" %>
                 <%= f.submit "Delete", :class => "btn  btn-primary btn-sm" %>
               <% end %>
             </th>
+            <!-- 削除ボタン ここまで -->
           </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+    <% end %>
+    <!-- deploymentの状態 ここまで -->
   </ul>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h2>Create</h2>
-      <%= link_to "Create", create_path, :class => "btn  btn-primary" %>
-    </div>
-    <div class="col-md-6">
-      <h2>Delete</h2>
-      <a class="btn  btn-primary" href="#" role="button">Delete</a>
-    </div>
-  </div>
 </div>
