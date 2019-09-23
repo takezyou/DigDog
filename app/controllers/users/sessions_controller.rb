@@ -13,8 +13,8 @@ class Users::SessionsController < Devise::SessionsController
     super
 
     if resource.sign_in_count == 1
-      #client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+      #client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
 
       namespaces_list = client.api('v1').resource('namespaces').list
       namespaces = []
