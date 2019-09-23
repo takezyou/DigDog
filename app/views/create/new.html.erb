@@ -1,9 +1,24 @@
 <div class="container" style="width: 100%; max-width: 500px; padding: 15px; margin: 0 auto;">
-  <%= bootstrap_form_tag url: '/create/state' do |f|  %>
+
+  <% if @create.errors.any? %>
+  <!-- バリデーションのエラーがあった時 -->
+    <div id="error_explanation" class="alert alert-danger">
+      <ul>
+        <% @create.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    <!-- バリデーションのエラーがあった時 ここまで-->
+  <% end %>
+
+  <%= form_with(model: @create, url: '/create/state', local: true) do |f| %>
     <!-- イメージ選択 -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.select :image, options_for_select(@repo), {label: "Image："} %>
+        <%= f.label :image, 'Image:', :class => 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.select :image, options_for_select(@repo), {}, class: 'form-control' %>
       </div>
     </div>
     <!-- イメージ選択 ここまで -->
@@ -11,7 +26,9 @@
     <!-- Podの名前 -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.text_field :name, {label: "Name：", :required => true} %>
+        <%= f.label :name, 'Name: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.text_field :name, class: 'form-control' %>
       </div>
     </div>
     <!-- Podの名前 ここまで -->
@@ -19,7 +36,9 @@
     <!-- Port -->
     <div class="form-group" align="left">
       <div class="form-inline">
-        <%= f.phone_field :port, {label: "Port：", :required => true}%>
+        <%= f.label :port, 'Port: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :port, class: 'form-control' %>
       </div>
     </div>
     <!-- Port ここまで -->
