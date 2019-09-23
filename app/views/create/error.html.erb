@@ -1,0 +1,12 @@
+<% @page_title = "エラー"%>
+
+<div class="container" style="width: 100%; padding: 15px; margin: 0 auto;">
+  <div class="alert alert-danger" role="alert" style="margin: auto;">
+    <p style="text-align: center;"><strong>エラーが発生しました。</strong>しばらくしてからもう一度お試しください</p>
+  </div>
+  <% if @error %>
+    <div style="text-align: center;">
+      <%= @error %>
+    </div>
+  <% end %>
+</div>
