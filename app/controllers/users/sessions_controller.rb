@@ -15,16 +15,21 @@ class Users::SessionsController < Devise::SessionsController
     if resource.sign_in_count == 1
       client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
       #client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+      current_username = cuurent_user.username
 
       namespaces_list = client.api('v1').resource('namespaces').list
       namespaces = []
       namespaces_list.each do |namespace|
         namespaces.push(namespace.metadata.name)
       end
-      count = namespaces.select{|namespace| namespace == current_user.username}
+      count = namespaces.select{|namespace| namespace == curent_username}
       if count.count == 0
-        system("kubectl create namespace #{current_user.username}")
+        system("kubectl create namespace #{current_username}")
       end
+      
+      # check serviceaccount
+      serviceaccount_user = client.api('v1').resource('serviceaccount', namespace: current_username).list
+      serviceaccount_user_count = serviceaccount_user.metadata.name
     end
   end
 
@@ -39,4 +44,18 @@ class Users::SessionsController < Devise::SessionsController
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
+
+  private
+
+  def create_serviceaccount(client)
+    serviceaccount = K8s::Resource.new(
+      apiVersion: v1,
+      kind: ServiceAccount,
+      metadata: {
+        name: "#{current_user.username}",
+        namespace: "#{current_user.username}" 
+      }
+    )
+    client.api('v1').resource('serviceaccounts').create_resource(serviceaccount)
+  end
 end
