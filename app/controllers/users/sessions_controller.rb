@@ -25,7 +25,7 @@ class Users::SessionsController < Devise::SessionsController
       count = namespaces.select{|namespace| namespace == current_username}
       if count.count == 0
         system("kubectl create namespace #{current_username}")
-        create_rbac(client)
+        create_rbac(client, current_username
       end
     end
   end
@@ -44,13 +44,13 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-  def create_rbac(client)
+  def create_rbac(client, current_username)
     serviceaccount = K8s::Resource.new(
       apiVersion: v1,
       kind: ServiceAccount,
       metadata: {
-        name: "#{current_user.username}",
-        namespace: "#{current_user.username}" 
+        name: "#{current_username}",
+        namespace: "#{current_username}" 
       }
     )
     client.api('v1').resource('serviceaccounts').create_resource(serviceaccount)
@@ -59,8 +59,8 @@ class Users::SessionsController < Devise::SessionsController
       apiVersion: 'rbac.authorization.k8s.io/v1',
       kind: 'Role',
       metadata: {
-        namespace: "#{current_user.username}",
-        name: "#{current_user.username}"
+        namespace: "#{current_username}",
+        name: "#{current_username}"
       },
       rules: [
         {
@@ -70,6 +70,29 @@ class Users::SessionsController < Devise::SessionsController
         }
       ]
     )
-    client.api('rbac.authorization.k8s.io/v1').resource('roles').create_resouce(role)
+    client.api('rbac.authorization.k8s.io/v1').resource('roles').create_resource(role)
+
+    rolebinding = K8s::Resource.new(
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'RoleBinding',
+      metadata: {
+        namespace: "#{current_username}",
+        name: "#{current_username}-rolebinding"
+      },
+      roleRef: {
+         apiGroup: 'rbac.authorization.k8s.io',
+         kind: 'Role',
+         name: "#{current_username}"
+      },
+      subjects: [
+        {
+          apiGroups: "",
+          kind: 'ServiceAccount',
+          name: "#{current_username}",
+          namespace: "#{current_username}"
+        }
+      ]
+    )
+    client.api('rbac.authorization.k8s.io/v1').resource('rolebindings').create_resource(rolebinding)
   end
 end
