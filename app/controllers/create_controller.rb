@@ -68,7 +68,7 @@ class CreateController < ApplicationController
         kind: 'Deployment',
         metadata: {
           name: "#{name}",
-          namespace: 'student'
+          namespace: "#{current_user.username}"
         },
         spec: {
           replicas: 1,
@@ -101,7 +101,7 @@ class CreateController < ApplicationController
           }
         }
       )
-      @create = client.api('apps/v1').resource('deployments', namespace: 'student').create_resource(resource)
+      @create = client.api('apps/v1').resource('deployments', namespace: "#{current_user.username}").create_resource(resource)
       @expose = system("kubectl --namespace=student expose --type NodePort --port #{port} deployment #{name}")
     else
       render 'new'
