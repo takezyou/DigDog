@@ -15,21 +15,18 @@ class Users::SessionsController < Devise::SessionsController
     if resource.sign_in_count == 1
       client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
       #client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
-      current_username = cuurent_user.username
+      current_username = current_user.username
 
       namespaces_list = client.api('v1').resource('namespaces').list
       namespaces = []
       namespaces_list.each do |namespace|
         namespaces.push(namespace.metadata.name)
       end
-      count = namespaces.select{|namespace| namespace == curent_username}
+      count = namespaces.select{|namespace| namespace == current_username}
       if count.count == 0
         system("kubectl create namespace #{current_username}")
+        create_rbac(client)
       end
-      
-      # check serviceaccount
-      serviceaccount_user = client.api('v1').resource('serviceaccount', namespace: current_username).list
-      serviceaccount_user_count = serviceaccount_user.metadata.name
     end
   end
 
@@ -47,7 +44,7 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-  def create_serviceaccount(client)
+  def create_rbac(client)
     serviceaccount = K8s::Resource.new(
       apiVersion: v1,
       kind: ServiceAccount,
@@ -57,5 +54,22 @@ class Users::SessionsController < Devise::SessionsController
       }
     )
     client.api('v1').resource('serviceaccounts').create_resource(serviceaccount)
+
+    role = K8s::Resource.new(
+      apiVersion: 'rbac.authorization.k8s.io/v1',
+      kind: 'Role',
+      metadata: {
+        namespace: "#{current_user.username}",
+        name: "#{current_user.username}"
+      },
+      rules: [
+        {
+          apiGroups: [""],
+          resources: ["pods"],
+          verbs: ["get", "watch", "list"]
+        }
+      ]
+    )
+    client.api('rbac.authorization.k8s.io/v1').resource('roles').create_resouce(role)
   end
 end
