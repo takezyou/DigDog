@@ -25,7 +25,7 @@ class Users::SessionsController < Devise::SessionsController
       count = namespaces.select{|namespace| namespace == current_username}
       if count.count == 0
         system("kubectl create namespace #{current_username}")
-        create_rbac(client, current_username
+        create_rbac(client, current_username)
       end
     end
   end
@@ -46,8 +46,8 @@ class Users::SessionsController < Devise::SessionsController
 
   def create_rbac(client, current_username)
     serviceaccount = K8s::Resource.new(
-      apiVersion: v1,
-      kind: ServiceAccount,
+      apiVersion: 'v1',
+      kind: 'ServiceAccount',
       metadata: {
         name: "#{current_username}",
         namespace: "#{current_username}" 
