@@ -58,13 +58,7 @@
             <th><%= deployment.status.conditions[0].status %></th>
             <th><%= deployment.status.conditions[1].status %></th>
             <!-- 削除ボタン -->
-            <th>
-              <%= bootstrap_form_tag url: "/delete" do |f| %>
-                <%= f.hidden_field "deployment", :value => "#{deployment.metadata.name}" %>
-                <%= f.submit "Delete", :class => "btn  btn-primary btn-sm" %>
-              <% end %>
-            </th>
-            <!-- 削除ボタン ここまで -->
+            <th><button class="btn btn-primary btn-sm" id="delete" data="<%= deployment.metadata.name %>">Delete</button></th>
           </tr>
           <% end %>
         </tbody>

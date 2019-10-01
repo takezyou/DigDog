@@ -19,9 +19,6 @@ class CreateController < ApplicationController
       when Net::HTTPSuccess # 2xx系
         result = JSON.parse(response.body)
         @repo = result['repositories']
-
-        @client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-        #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
       else
         @error = "HTTP ERROR: code=#{response.code} message=#{response.message}"
       end
@@ -43,7 +40,9 @@ class CreateController < ApplicationController
       render 'error', group: @error
     end
 
-    pods = @client.api('v1').resource('pods', namespace: current_user.username).list
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+    #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+    pods = client.api('v1').resource('pods', namespace: current_user.username).list
     if pods.count > 2
       @error = "Podの作成数の上限を超えています。(上限:3、現在:#{pods.count})"
       render 'error', group: @error
@@ -101,6 +100,10 @@ class CreateController < ApplicationController
           }
         }
       )
+
+      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+      #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+
       @create = client.api('apps/v1').resource('deployments', namespace: 'student').create_resource(resource)
       @expose = system("kubectl --namespace=student expose --type NodePort --port #{port} deployment #{name}")
     else
