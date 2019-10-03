@@ -9,7 +9,7 @@
     <div class="card-body">
       <p>$ kubectl config set-cluster ie-k8s --server=https://10.50.0.151:6443 --insecure-skip-tls-verify=true</p>
       <p>$ kubectl config set-context <%= current_user.username %>-context --cluster=ie-k8s</p>
-      <p>$ kubectl config set-credentials --token=<%= @token %></p>
+      <p>$ kubectl config set-credentials <%= current_user.username %>-context --token=<%= @token %></p>
       <p>$ kubectl config set-context <%= current_user.username %>-context --user=<%= current_user.username %> --namespace=<%= current_user.username %></p>
       <p>$ kubectl config use-context <%= current_user.username %>-context</p>
     </div>
