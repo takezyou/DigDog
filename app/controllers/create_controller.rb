@@ -67,7 +67,7 @@ class CreateController < ApplicationController
         kind: 'Deployment',
         metadata: {
           name: "#{name}",
-          namespace: 'student'
+          namespace: current_user.username
         },
         spec: {
           replicas: 1,
@@ -104,8 +104,8 @@ class CreateController < ApplicationController
       client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
       #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
 
-      @create = client.api('apps/v1').resource('deployments', namespace: 'student').create_resource(resource)
-      @expose = system("kubectl --namespace=student expose --type NodePort --port #{port} deployment #{name}")
+      @create = client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+      @expose = system("kubectl --namespace=#{current_user.username} expose --type NodePort --port #{port} deployment #{name}")
     else
       render 'new'
     end
