@@ -29,7 +29,8 @@ $.ajaxSetup({
 
 $(function() {
   $('button#delete').on('click', function() {
-    var id = $('button#delete').attr('data')
+    var e = $(this)
+    var id = e.attr('data')
     var check = confirm('Deployment "'+id+'" を削除しますか？');
 
     if(check == true) {
@@ -40,7 +41,11 @@ $(function() {
       })
 
      .done(function() {
-        clickEle.parents('tr').remove();
+        if (e.parents('tr').length == 1) {
+          $('#deploy').html('<p>対象が存在しません</p>');
+        } else {
+          e.parents('tr').remove();
+        }
       })
 
      .fail(function() {

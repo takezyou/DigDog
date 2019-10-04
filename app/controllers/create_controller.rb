@@ -3,16 +3,21 @@ require 'uri'
 require 'json'
 
 class CreateController < ApplicationController
+  before_action :authenticate_user!
   attr_accessor :repo, :client
 
   def initialize()
+    token = get_token()
     uri = URI.parse('https://registry.ie.u-ryukyu.ac.jp/v2/_catalog')
+
+    req = Net::HTTP::Get.new(uri)
+    req['Authorization'] = "bearer #{token}"
 
     begin
       response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.open_timeout = 5
         http.read_timeout = 10
-        http.get(uri.request_uri)
+        http.request(req)
       end
 
       case response
@@ -115,6 +120,22 @@ class CreateController < ApplicationController
   private
   def create_params
     params.require(:create).permit(:image, :name, :port)
+  end
+
+  def get_token
+    uri = URI('https://gitlab.ie.u-ryukyu.ac.jp/jwt/auth?service=container_registry&scope=registry:catalog:*')
+    req = Net::HTTP::Get.new(uri)
+    config = YAML.load_file(File.join(Rails.root, "config", "password.yml"))['repository']
+    req.basic_auth(config['username'], config['password'])
+    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') { |http|
+      http.request(req)
+    }
+    if res.is_a?(Net::HTTPSuccess)
+      token = JSON.parse(res.body)['token']
+      return token
+    else
+      abort "get access_token failed: body=" + res.body
+    end
   end
 
 end
