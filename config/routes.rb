@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   post 'create/state' => 'create#state'
   get 'delete', controller: 'application', action: 'render_404'
   post 'delete' => 'status#delete'
+  delete 'delete' => 'status#delete'
 end

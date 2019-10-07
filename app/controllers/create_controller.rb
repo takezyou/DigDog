@@ -3,25 +3,27 @@ require 'uri'
 require 'json'
 
 class CreateController < ApplicationController
+  before_action :authenticate_user!
   attr_accessor :repo, :client
 
   def initialize()
+    token = get_token()
     uri = URI.parse('https://registry.ie.u-ryukyu.ac.jp/v2/_catalog')
+
+    req = Net::HTTP::Get.new(uri)
+    req['Authorization'] = "bearer #{token}"
 
     begin
       response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.open_timeout = 5
         http.read_timeout = 10
-        http.get(uri.request_uri)
+        http.request(req)
       end
 
       case response
       when Net::HTTPSuccess # 2xx系
         result = JSON.parse(response.body)
         @repo = result['repositories']
-
-        @client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-        #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
       else
         @error = "HTTP ERROR: code=#{response.code} message=#{response.message}"
       end
@@ -43,7 +45,9 @@ class CreateController < ApplicationController
       render 'error', group: @error
     end
 
-    pods = @client.api('v1').resource('pods', namespace: current_user.username).list
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+    #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+    pods = client.api('v1').resource('pods', namespace: current_user.username).list
     if pods.count > 2
       @error = "Podの作成数の上限を超えています。(上限:3、現在:#{pods.count})"
       render 'error', group: @error
@@ -68,7 +72,7 @@ class CreateController < ApplicationController
         kind: 'Deployment',
         metadata: {
           name: "#{name}",
-          namespace: "#{current_user.username}"
+          namespace: current_user.username
         },
         spec: {
           replicas: 1,
@@ -101,8 +105,12 @@ class CreateController < ApplicationController
           }
         }
       )
-      @create = client.api('apps/v1').resource('deployments', namespace: "#{current_user.username}").create_resource(resource)
-      @expose = system("kubectl --namespace=student expose --type NodePort --port #{port} deployment #{name}")
+      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+      #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
+
+      @create = client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+      @expose = system("kubectl --namespace=#{current_user.username} expose --type NodePort --port #{port} deployment #{name}")
+
     else
       render 'new'
     end
@@ -112,6 +120,22 @@ class CreateController < ApplicationController
   private
   def create_params
     params.require(:create).permit(:image, :name, :port)
+  end
+
+  def get_token
+    uri = URI('https://gitlab.ie.u-ryukyu.ac.jp/jwt/auth?service=container_registry&scope=registry:catalog:*')
+    req = Net::HTTP::Get.new(uri)
+    config = YAML.load_file(File.join(Rails.root, "config", "password.yml"))['repository']
+    req.basic_auth(config['username'], config['password'])
+    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') { |http|
+      http.request(req)
+    }
+    if res.is_a?(Net::HTTPSuccess)
+      token = JSON.parse(res.body)['token']
+      return token
+    else
+      abort "get access_token failed: body=" + res.body
+    end
   end
 
 end
