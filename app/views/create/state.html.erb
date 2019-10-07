@@ -1,6 +1,6 @@
 <div class="container">
   <% if @expose %>
-    image:<%= params[:image] %>, name:<%= params[:name] %>, port:<%= params[:port] %>で作成しました。<br>
+    image:<%= params[:create][:image] %>, name:<%= params[:create][:name] %>, port:<%= params[:create][:port] %>で作成しました。<br>
     現在の状態は<%= link_to "こちら", status_show_path %>で確認してください
   <% else %>
     エラーが発生しました。<br>
