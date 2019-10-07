@@ -28,6 +28,10 @@
           <li class="nav-item">
             <%= link_to "Status", status_show_path, :class => 'nav-link' %>
           </li>
+          <!-- CLI config説明のリンク -->
+          <li class="nav-item">
+            <%= link_to "Use CLI", config_index_path, :class => 'nav-link' %>
+          </li>
           <!-- ステータスページヘのリンク 終わり -->
           <li class="nav-item"> <!-- ログイン/ログアウト リンク -->
             <% if user_signed_in? %>
