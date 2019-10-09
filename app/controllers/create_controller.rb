@@ -67,6 +67,12 @@ class CreateController < ApplicationController
       name = create_params[:name]
       port = create_params[:port]
 
+      @create.deploy = name
+      @create.space = current_user.username
+      @create.create_time = Time.now
+      @create.is_delete = true
+      @create.is_recognize = false
+
       resource = K8s::Resource.new(
         apiVersion: 'apps/v1',
         kind: 'Deployment',
@@ -105,12 +111,15 @@ class CreateController < ApplicationController
           }
         }
       )
-
       client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
       #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
 
-      @create = client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+      client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
       @expose = system("kubectl --namespace=#{current_user.username} expose --type NodePort --port #{port} deployment #{name}")
+
+      if @expose
+        @create.save
+      end
     else
       render 'new'
     end

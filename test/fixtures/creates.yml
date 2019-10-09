@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  deploy: MyString
+  space: MyString
+  create_time: 2019-10-10 02:54:36
+  is_delete: false
+  is_recognize: false
+
+two:
+  deploy: MyString
+  space: MyString
+  create_time: 2019-10-10 02:54:36
+  is_delete: false
+  is_recognize: false
