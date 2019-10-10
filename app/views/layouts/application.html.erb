@@ -43,6 +43,10 @@
       <!-- ナビゲーションバー 右側 -->
       <div class="nav nav-masthead justify-content-center">
         <ul class="navbar-nav mr-auto">
+          <% if user_signed_in? && current_user.is_admin %>
+            <li class="nav-item"><%= link_to 'Adminページ', admin_root_path, :class => 'nav-link' %></li>
+            <li class="nav-item ml-4"></li>
+          <% end %>
           <%if user_signed_in? %>
             <span class="navbar-text">ようこそ! <%= current_user.username %>さん</span> <!-- ユーザー名表示 -->
           <% end %>

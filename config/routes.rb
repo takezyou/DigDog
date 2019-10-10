@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     sessions: 'users/sessions'
   }
 
+  namespace :admin do
+    root "deploy#index"
+  end
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root "top#index"
   get 'status/show'
