@@ -1,0 +1,33 @@
+<nav class="navbar">
+  <form class="form-inline">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary">Find</button>
+      </div>
+    </div>
+  </form>
+</nav>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Deployment</th>
+        <th>Namespace</th>
+        <th>作成日時</th>
+        <th>削除免除承認してるか</th>
+        <th></th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @create.each do |deploy| %>
+      <tr>
+        <th><%= deploy.deploy %></th>
+        <th><%= deploy.space %></th>
+        <th><%= deploy.create_time %></th>
+        <th><%= deploy.is_recognize %></th>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
