@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   root "top#index"
   get 'status/show'
   get 'status/user'
+  get 'config/index'
   get 'create' => 'create#new'
   post 'create' => 'deploy#create'
   get 'delete', controller: 'application', action: 'render_404'
