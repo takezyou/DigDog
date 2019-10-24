@@ -15,9 +15,9 @@ Rails.application.routes.draw do
   get 'status/show'
   get 'status/user'
   get 'create' => 'create#new'
-  get 'create/state', controller: 'application', action: 'render_404'
-  post 'create/state' => 'create#state'
+  post 'create' => 'deploy#create'
   get 'delete', controller: 'application', action: 'render_404'
-  post 'delete' => 'status#delete'
-  delete 'delete' => 'status#delete'
+  delete 'delete' => 'deploy#delete'
+  get 'expand', controller: 'application', action: 'render_404'
+  post 'expand' => 'deploy#expand'
 end

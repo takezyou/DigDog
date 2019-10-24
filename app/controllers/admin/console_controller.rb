@@ -7,7 +7,13 @@ class Admin::ConsoleController < ApplicationController
   end
 
   def deploy
-    @create = Create.all
+    create = Create.all
+    @check = []
+    create.each do |deploy|
+      if deploy.is_recognize == false
+        @check.push(deploy)
+      end
+    end
     render partial: 'admin/console/deploy'
   end
 
