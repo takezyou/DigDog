@@ -12,50 +12,10 @@
 //
 //= require rails-ujs
 //= require activestorage
+//= require jquery
+//= require jquery_ujs
 //= require_tree .
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
 //= require turbolinks
-
-// https://qiita.com/u-dai/items/d43e932cd6d96c09b69aを参考に作成
-
-// CSRF対策
-$.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-
-$(function() {
-  $('button#delete').on('click', function() {
-    var e = $(this)
-    var id = e.attr('data')
-    var check = confirm('Deployment "'+id+'" を削除しますか？');
-
-    if(check == true) {
-      $.ajax({
-        url: '/delete',
-        type: 'POST',
-        data: {'deployment': id, '_method': 'DELETE'}
-      })
-
-     .done(function() {
-        if (e.parents('tr').length == 1) {
-          $('#deploy').html('<p>対象が存在しません</p>');
-        } else {
-          e.parents('tr').remove();
-        }
-      })
-
-     .fail(function() {
-        alert('エラーが発生しました。\n時間をおいてもう一度お試しください。');
-      });
-
-    } else {
-      (function(e) {
-        e.preventDefault()
-      });
-    };
-  });
-});

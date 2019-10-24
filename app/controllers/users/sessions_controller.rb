@@ -27,6 +27,29 @@ class Users::SessionsController < Devise::SessionsController
         system("kubectl create namespace #{current_username}")
         create_rbac(client, current_username)
       end
+
+      config = YAML.load_file(File.join(Rails.root, "config", "ldap.yml"))['admin']
+      ldap = Net::LDAP.new(host: config['host'], port: config['port'], base: config['base'],
+        auth: { :method => :simple,
+          :username => config['admin_user'],
+          :password => config['admin_password'] })
+      raise 'bind failed' unless ldap.bind
+      entries = {}
+      ldap.open { |conn|
+        filter = Net::LDAP::Filter.eq(config['attribute'], current_user.username)
+        conn.search(filter: filter) do |entry|
+          entry.each do |field, value|
+            entries[field] = value
+          end
+        end
+      }
+
+      count = entries[:memberuid].select{|id| id == current_user.username}
+      if count.count == 1
+        user = User.where(:username => current_user.username).first
+        user.is_admin = true
+        user.save
+      end
     end
   end
 
