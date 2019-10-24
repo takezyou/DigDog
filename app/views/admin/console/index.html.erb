@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <%= link_to "Top", "#v-pills-top", :class => "nav-link active", :id =>"v-pills-top-tab", :data => {:toggle => "pill"}, :aria => {:controls => "v-pills-top", :selected => "true"} %>
+        <%= link_to "Deployment", "#v-pills-deploy", :class => "nav-link", :id =>"v-pills-deploy-tab", :data => {:toggle => "pill"}, :aria => {:controls => "v-pills-deploy", :selected => "false"} %>
+        <%= link_to "Admin", "#v-pills-admin", :class => "nav-link", :id =>"v-pills-admin-tab", :data => {:toggle => "pill"}, :aria => {:controls => "v-pills-admin", :selected => "false"} %>
+      </div>
+    </div>
+    <div class="col-10">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-top" role="tabpanel" aria-labelledby="v-pills-top-tab">
+          <p>← 右のメニューから選んでください。</p>
+        </div>
+        <div class="tab-pane fade" id="v-pills-deploy" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          hoge
+        </div>
+        <div class="tab-pane fade" id="v-pills-admin" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          fuga
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

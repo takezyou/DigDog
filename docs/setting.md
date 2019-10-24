@@ -10,16 +10,25 @@
 - config/ldap.yml
   - LDAP認証にて使用
   - 以下をコピペして必要な部分を編集して保存
-  ```
-  development:
-    host: "<LDAPサーバのアドレス>"
-    port: 389
-    attribute: cn
-    base: "<basedn>"
-    admin_user: "<adminユーザー>"
-    admin_password: "<adminユーザーのパスワード>"
-    ssl: false
-  ```
+```
+development:
+  host: "<LDAPサーバのアドレス>"
+  port: 389
+  attribute: cn
+  base: "<basedn>"
+  admin_user: "<adminユーザー>"
+  admin_password: "<adminユーザーのパスワード>"
+  ssl: false
+
+admin:
+  host: "<LDAPサーバのアドレス>"
+  port: 389
+  attribute: memberUid
+  base: "<adminユーザにしたいgroupのbasedn>"
+  admin_user: "<adminユーザー>"
+  admin_password: "<adminユーザーのパスワード>"
+  ssl: false
+```
 
 - config/password.yml
   - リポジトリのリストを取ってくる時に使用
