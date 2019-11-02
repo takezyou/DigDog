@@ -104,7 +104,7 @@ class DeployController < ApplicationController
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
     @deploy = client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
-    @service = system("kubectl --namespace=#{current_user.username} delete svc #{deployment}")
+    client.api('v1').resource('services', namespace: current_user.username).delete("#{deployment}")
 
     if @service
       deploy = Create.where(:deploy => deployment, :space => current_user.username).first
