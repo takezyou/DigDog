@@ -22,6 +22,8 @@ class DeployController < ApplicationController
       @create.is_delete = true
       @create.is_recognize = false
 
+      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+
       resource = K8s::Resource.new(
         apiVersion: 'apps/v1',
         kind: 'Deployment',
@@ -60,12 +62,28 @@ class DeployController < ApplicationController
           }
         }
       )
-      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-      #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
-
       client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
 
-      @expose = system("kubectl --namespace=#{current_user.username} expose --type NodePort --port #{port} deployment #{name}")
+      expose_resource = K8s::Resource.new(
+        kind: 'Service',
+        apiVersion: 'v1',
+        metadata: {
+          namespace: current_user.username,
+          name: "#{name}"
+        },
+        spec: {
+          ports: [
+            name: "#{name}",
+            port: "#{port}".to_i,
+            protocol: "TCP"
+          ],
+          type: "NodePort",
+          selector: {
+            app: "#{name}"
+          }
+        }
+      )
+      client.api('v1').resource('services').create_resource(expose_resource)
 
       if @expose
         @create.save
@@ -86,7 +104,7 @@ class DeployController < ApplicationController
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
     @deploy = client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
-    @service = system("kubectl --namespace=#{current_user.username} delete svc #{deployment}")
+    client.api('v1').resource('services', namespace: current_user.username).delete("#{deployment}")
 
     if @service
       deploy = Create.where(:deploy => deployment, :space => current_user.username).first
