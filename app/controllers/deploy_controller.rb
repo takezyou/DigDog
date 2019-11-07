@@ -62,36 +62,41 @@ class DeployController < ApplicationController
           }
         }
       )
-      client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
 
-      expose_resource = K8s::Resource.new(
-        kind: 'Service',
-        apiVersion: 'v1',
-        metadata: {
-          namespace: current_user.username,
-          name: "#{name}"
-        },
-        spec: {
-          ports: [
-            name: "#{name}",
-            port: "#{port}".to_i,
-            protocol: "TCP"
-          ],
-          type: "NodePort",
-          selector: {
-            app: "#{name}"
-          }
-        }
-      )
-      client.api('v1').resource('services').create_resource(expose_resource)
+      begin
+        client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+        begin
+          expose_resource = K8s::Resource.new(
+            kind: 'Service',
+            apiVersion: 'v1',
+            metadata: {
+              namespace: current_user.username,
+              name: "#{name}"
+            },
+            spec: {
+              ports: [
+                name: "#{name}",
+                port: "#{port}".to_i,
+                protocol: "TCP"
+              ],
+              type: "NodePort",
+              selector: {
+                app: "#{name}"
+              }
+            }
+          )
+          client.api('v1').resource('services').create_resource(expose_resource)
+          @create.save
 
-      if @expose
-        @create.save
+          text = "<ul><li>image: #{create_params[:image]}</li><li>name: #{create_params[:name]}</li><li>port: #{create_params[:port]}</li></ul>"
+          flash.now[:success] = text
 
-        text = "<ul><li>image: #{create_params[:image]}</li><li>name: #{create_params[:name]}</li><li>port: #{create_params[:port]}</li></ul>"
-        flash.now[:success] = text
-
-        render 'create/new', group: @repo
+          render 'create/new', group: @repo
+        rescue K8s::Error::Conflict => e
+          conflict_message(name, @repo)
+        end
+      rescue K8s::Error::Conflict => e
+        conflict_message(name, @repo)
       end
     else
       render 'create/new', group: @repo
@@ -124,5 +129,12 @@ class DeployController < ApplicationController
   private
   def create_params
     params.require(:create).permit(:image, :name, :port)
+  end
+
+  def conflict_message(name, repo)
+    text = "Conflictが発生しました<ul><li>Deployment \"#{name}\" は既に存在します</li></ul>"
+    flash.now[:warning] = text
+
+    render 'create/new', group: repo
   end
 end
