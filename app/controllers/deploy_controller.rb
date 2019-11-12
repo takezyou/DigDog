@@ -108,14 +108,18 @@ class DeployController < ApplicationController
     deployment = params[:deployment]
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-    @deploy = client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
-    client.api('v1').resource('services', namespace: current_user.username).delete("#{deployment}")
-
-    if @service
-      deploy = Create.where(:deploy => deployment, :space => current_user.username).first
-      deploy.delete
+    begin
+      client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
+      begin
+        client.api('v1').resource('services', namespace: current_user.username).delete("#{deployment}")
+        deploy = Create.where(:deploy => deployment, :space => current_user.username).first
+        deploy.delete
+      rescue K8s::Error => e
+          render :text => e.message, :status => 500
+      end
+    rescue K8s::Error
+      render :text => e.message, :status => 500
     end
-
   end
 
   #デプロイの除外申請
