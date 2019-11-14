@@ -1,0 +1,115 @@
+<%= render 'admin/nav_header', active: 'deploy' %>
+<h3>承認待ちリスト</h3>
+<!-- 検索欄 -->
+<nav class="navbar">
+  <form class="form-inline">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary">Find</button>
+      </div>
+    </div>
+  </form>
+</nav>
+<!-- 検索欄 ここまで-->
+<!-- テーブル -->
+<div class="table-responsive" id="deploy" >
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th></th>
+        <th><div align="center">Namespace</div></th>
+        <th><div align="center">Name</div></th>
+        <th><div align="center">Image</div></th>
+        <th><div align="center">Port</div></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @merged.each do |deploy| %>
+        <tr>
+          <th>
+          <% if deploy[4] == false && deploy[5] == true %>
+            <!-- 承認済み -->
+            <div align="center"><span class="badge badge-success">承認済み</span></div>
+            <!-- 承認済み ここまで -->
+          <% elsif deploy[4] == false && deploy[5] == false %>
+            <!-- 承認待ち -->
+            <div align="center"><span class="badge badge-primary">承認待ち</span></div>
+            <!-- 承認待ち ここまで -->
+          <% elsif deploy[4] == true && deploy[5] == false %>
+            <div align="center"><span class="badge badge-secondary">未申請</span></div>
+          <% elsif deploy[4] == nil && deploy[5] == nil %>
+            <!-- エラー -->
+            <div align="center"><span class="badge badge-danger" data-toggle="tooltip" title="データベースと一致しません">Error</span></div>
+            <!-- エラー ここまで -->
+          <% end %>
+          </th>
+          <th><div align="center"><%= deploy[1] %></div></th>
+          <th><div align="center"><%= deploy[0] %></div></th>
+          <th><div align="center"><%= deploy[2] %></div></th>
+          <th><div align="center"><%= deploy[3] %></div></th>
+          <th></th>
+          <th>
+            <button type="button" class="btn btn-primary btn-sm" data-whatever="" data-toggle="modal" data-target="#editModal">
+              edit
+            </button>
+          </th>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<!-- テーブル ここまで -->
+<!-- モーダル -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_with(model: @create, url: admin_deploy_index_path, local: true) do |f| %>
+          <!-- Deploymentの名前 -->
+          <div class="form-group" align="left">
+            <div class="form-inline">
+              <label class="control-label">Deployment名: </label>
+              <span style="margin: 10px;"></span>
+              <%= f.text_field :name, readonly: true, class: 'control-label', id: 'deploy_name'  %>
+            </div>
+          </div>
+          <!-- Deploymentの名前 ここまで -->
+
+          <!-- Port -->
+          <div class="form-group" align="left">
+            <div class="form-inline">
+              <label class="control-label">Namespace: </label>
+              <span style="margin: 10px;"></span>
+              <%= f.text_field :space, readonly: true, class: 'control-label', id: 'deploy_space'  %>
+            </div>
+          </div>
+          <!-- Port ここまで -->
+
+          <!-- 承認済み -->
+          <div class="form-group" align="left">
+            <div class="form-inline">
+              <label class="control-label">承認済みにする: </label>
+              <span style="margin: 10px;"></span>
+              <label class="control-label" id="deploy_is_recognize"></label>
+              <%= f.check_box :is_recognize, class: 'control-label', id: 'deploy_is_recognize' %>
+            </div>
+          </div>
+          <!-- 承認済み ここまで-->
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+            <%= f.submit "保存", class: "btn btn-primary" %>
+          <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- モーダル ここまで -->
+<%= render 'admin/nav_footer' %>

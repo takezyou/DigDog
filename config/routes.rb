@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "console#index"
-    get 'deploy' => "console#deploy"
+    resources :deploy, :except => [:new, :create, :destroy]
     get 'admin' => "console#admin"
   end
 

@@ -78,16 +78,13 @@
               <label class="control-label">承認済みにする: </label>
               <span style="margin: 10px;"></span>
               <label class="control-label" id="deploy_is_recognize"></label>
-              <%= f.text_field :is_recognize, readonly: true, class: 'control-label', id: 'deploy_is_recognize'  %>
+              <%= f.check_box :is_recognize, class: 'control-label', id: 'deploy_is_recognize' %>
             </div>
           </div>
           <!-- 承認済み ここまで-->
-
-        <% end %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-        <button type="button" class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+            <%= f.submit "保存", class: "btn btn-primary" %>
+          <% end %>
       </div>
     </div>
   </div>
