@@ -58,6 +58,7 @@ GEM
     bootstrap_form (2.7.0)
     builder (3.2.3)
     byebug (11.0.1)
+    c3-rails (0.4.18)
     capybara (3.28.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -77,6 +78,8 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
+    d3-rails (3.5.17)
+      railties (>= 3.1)
     devise (4.7.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -278,8 +281,10 @@ DEPENDENCIES
   bootstrap (~> 4.3.1)
   bootstrap_form
   byebug
+  c3-rails
   capybara (>= 2.15)
   coffee-rails (~> 4.2)
+  d3-rails (~> 3.5.17)
   devise
   devise_ldap_authenticatable
   glyphicons
