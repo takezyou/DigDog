@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root "console#index"
     resources :deploy, :except => [:new, :create, :destroy]
-    get 'admin' => "console#admin"
+    get 'pod' => "console#pod"
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
