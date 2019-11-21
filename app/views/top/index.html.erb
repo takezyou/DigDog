@@ -1,11 +1,14 @@
 <div class="container">
   <h2>Usage</h2>
-  <div id="chart"></div>
+  <div id="chart-memory">
+  </div>
+  <div id="chart-cpu">
+  </div>
 </div>
 
 <script type="text/javascript">
 var chart = c3.generate({
-    bindto: '#chart',
+    bindto: '#chart-memory',
     size: {
       width: 280,
       height: 280,
@@ -27,18 +30,48 @@ var chart = c3.generate({
     data: {
       columns: [
         ['data1', 10],
-        ['data2', 90],
-        ['data3', 10],
-        ['data4', 90]
+        ['data2', 90]
       ],
       type: 'donut',
       colors: {
         data1: '#00c752',
         data2: '#ddd',
-        data3: '#326de6',
-        data4: '#ddd'
       },
     },
     padding: {top: 45, right: 45, bottom: 45, left: 45},
+});
+
+var chart = c3.generate({
+    bindto: '#chart-cpu',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', 10],
+        ['data2', 90]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#326de6',
+        data2: '#ddd'
+      },
+    },
+    padding: {top: 0, right: 0, bottom: 0, left: 0},
 });
 </script>
