@@ -1,0 +1,74 @@
+<% @page_title = "Deployment" %>
+
+<%= render 'admin/nav_header', active: 'deploy' %>
+
+<% if session[:success].present? %>
+<!-- 成功時メッセージ -->
+  <div id="success_alert" class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= session[:success].html_safe %>
+  </div>
+  <% session[:success] = nil %>
+<!-- 成功時メッセージ ここまで -->
+<% end %>
+
+<%= form_with(model: @create, url: admin_deploy_path) do |f| %>
+
+  <!-- hidden -->
+  <%= f.hidden_field :deployment, value: "#{@create.deploy}" %>
+  <%= f.hidden_field :port, value: "#{@detail[1]}" %>
+  <%= f.hidden_field :image, value: "#{@detail[0]}" %>
+  <%= f.hidden_field :namespace,  value: "#{@create.space}" %>
+  <%= f.hidden_field :is_delete, value: "#{@create.is_delete}" %>
+  <!-- hidden ここまで -->
+
+  <!-- Deployment-->
+  <div class="form-group" align="left">
+    <div class="form-inline">
+      <label class="control-label">Deployment名: </label>
+      <span style="margin: 10px;"></span>
+      <label class="control-label"><%= "#{@create.deploy}" %></label>
+    </div>
+  </div>
+  <!-- Deployment ここまで -->
+
+  <!-- Namespace -->
+  <div class="form-group" align="left">
+    <div class="form-inline">
+      <label class="control-label">Namespace: </label>
+      <span style="margin: 10px;"></span>
+      <label class="control-label"><%= "#{@create.space}" %></label>
+    </div>
+  </div>
+  <!-- Namespace ここまで -->
+
+  <!-- Image -->
+  <div class="form-group" align="left">
+    <div class="form-inline">
+      <label class="control-label">Image: </label>
+      <span style="margin: 10px;"></span>
+      <label class="control-label"><%= @detail[0] %></label>
+    </div>
+  </div>
+  <!-- Image ここまで-->
+
+  <!-- 承認済み -->
+  <div class="form-group" align="left">
+    <div class="form-inline">
+      <label class="control-label">承認済みにする: </label>
+      <span style="margin: 10px;"></span>
+      <label class="control-label" id="deploy_is_recognize"></label>
+      <% if @create.is_recognize == true %>
+        <%= f.check_box :is_recognize, value: 1, class: 'control-label', id: 'deploy_is_recognize' %>
+      <% else %>
+        <%= f.check_box :is_recognize, value: 0, class: 'control-label', id: 'deploy_is_recognize' %>
+      <% end %>
+    </div>
+  </div>
+  <!-- 承認済み ここまで-->
+
+  <%= link_to "戻る", admin_deploy_index_path, :class => "btn btn-secondary" %>
+  <%= f.submit "保存", class: "btn btn-primary" %>
+  <% end %>
+
+<%= render 'admin/nav_footer' %>

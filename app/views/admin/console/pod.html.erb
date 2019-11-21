@@ -1,0 +1,27 @@
+<%= render 'admin/nav_header', active: 'admin' %>
+<h3>Podリスト</h3>
+<!-- テーブル -->
+<div class="table-responsive" id="deploy" >
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th><div align="center">Namespace</div></th>
+        <th><div align="center">Name</div></th>
+        <th><div align="center">Image</div></th>
+        <th><div align="center">Port</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @convert.each do |pod| %>
+        <tr>
+          <th><div align="center"><%= pod[1] %></div></th>
+          <th><div align="center"><%= pod[0] %></div></th>
+          <th><div align="center"><%= pod[2] %></div></th>
+          <th><div align="center"><%= pod[3] %></div></th>
+        </tr>
+        <% end %>
+    </tbody>
+  </table>
+</div>
+<!-- テーブル ここまで -->
+<%= render 'admin/nav_footer' %>
