@@ -37,9 +37,6 @@ class CreateController < ApplicationController
   def error
   end
 
-  #private
-
-
   def get_token
     uri = URI('https://gitlab.ie.u-ryukyu.ac.jp/jwt/auth?service=container_registry&scope=registry:catalog:*')
     req = Net::HTTP::Get.new(uri)

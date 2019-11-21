@@ -14,7 +14,7 @@
     <!-- バリデーションのエラーがあった時 ここまで-->
   <% end %>
 
-  <% if @expose %>
+  <% if flash[:success] %>
   <!-- 成功時メッセージ -->
     <div id="success_alert" class="alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -23,6 +23,16 @@
       現在の状態は<%= link_to "こちら", status_show_path %>で確認してください。
     </div>
   <!-- 成功時メッセージ ここまで -->
+  <% end %>
+
+  <% if flash[:warning] %>
+  <!-- conflict時メッセージ -->
+    <div id="conflict_alert" class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%= flash[:warning].html_safe %>
+      現在の状態は<%= link_to "こちら", status_show_path %>で確認してください。
+    </div>
+  <!-- conflict時メッセージ ここまで-->
   <% end %>
 
   <%= form_with(model: @create, url: '/create', local: true) do |f| %>
