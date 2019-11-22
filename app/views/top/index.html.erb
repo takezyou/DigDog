@@ -1,8 +1,24 @@
 <div class="container">
   <h2>Usage</h2>
-  <div id="chart-memory">
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Memory</h5>
+      <div class="row justify-content-center">
+        <div class="col-4" id="chart-memory"></div>
+        <div class="col-4" id="chart-cpu"></div>
+      </div>
+    </div>
   </div>
-  <div id="chart-cpu">
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">CPU</h5>
+      <div class="row justify-content-center">
+        <div class="col-4" id="chart-memory"></div>
+        <div class="col-4" id="chart-cpu"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -37,8 +53,7 @@ var chart = c3.generate({
         data1: '#00c752',
         data2: '#ddd',
       },
-    },
-    padding: {top: 45, right: 45, bottom: 45, left: 45},
+    }
 });
 
 var chart = c3.generate({
