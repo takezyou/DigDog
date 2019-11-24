@@ -1,12 +1,9 @@
-class Admin::ConsoleController < ApplicationController
+class Admin::DeployController < ApplicationController
   before_action :authenticate_user!
   before_action :if_not_admin
 
+  # すべてのdeployの一覧を表示
   def index
-
-  end
-
-  def pod
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
 
     # deployの一覧に表示させたくないnamespace(ユーザ用では無いnamespace)
@@ -32,7 +29,7 @@ class Admin::ConsoleController < ApplicationController
       pods_list = client.api('v1').resource('pods', namespace: namesapce).list
       pods_list.each do |pod|
         hash = pod.to_h
-        name = hash.dig(:metadata, :name)
+        name = hash.dig(:metadata, :labels, :app)
         space = hash.dig(:metadata, :namespace)
         image = hash.dig(:spec, :containers, 0, :image)
         port = "#{hash.dig(:spec, :containers, 0, :ports, 0, :protocol)}/#{hash.dig(:spec, :containers, 0, :ports, 0, :containerPort)}"
@@ -40,20 +37,61 @@ class Admin::ConsoleController < ApplicationController
       end
     end
 
-    @convert = []
+    # railsのデータベースにある取得したpodの情報を取得
+    @merged = []
     pods.each do |key,value|
       if !value.empty?
         value.each do |hash|
           name = hash.dig(:name)
           image = hash.dig(:image)
           port = hash.dig(:port)
-          @convert.push([name, key, image, port])
+          deploy = Create.where(deploy: name, space: key).first
+          if deploy == nil
+            is_delete = nil
+            is_recognize = nil
+            id = nil
+          else
+            is_delete = deploy.is_delete
+            is_recognize = deploy.is_recognize
+            id = deploy.id
+          end
+          @merged.push([name, key, image, port, is_delete, is_recognize, id])
         end
       end
     end
+
+    @create = Create.new
+  end
+
+  def edit
+    @create = Create.find(params[:id])
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+    hash = client.api('apps/v1').resource('deployments', namespace: @create.space).get(@create.deploy).to_h
+    image = hash.dig(:spec, :template, :spec, :containers, 0, :image)
+    port = hash.dig(:spec, :template, :spec, :containers, 0, :ports, 0, :containerPort)
+    @detail = [image, port]
+  end
+
+  def update
+    create = Create.find(params[:id].to_i)
+    create.name = params[:create][:deployment]
+    create.port = params[:create][:port]
+    create.image = params[:create][:image]
+    if params[:create][:is_recognize] == "1"
+      create.is_recognize = true
+    else
+      create.is_recognize = false
+    end
+    create.save
+
+    text = "変更しました。"
+    session[:success] = text
+    redirect_to "/admin/deploy/#{params[:id]}/edit"
   end
 
   private
+
+  # adminユーザかどうか
   def if_not_admin
     if current_user.is_admin == false
       redirect_to root_path

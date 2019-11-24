@@ -1,0 +1,20 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2">
+      <ul class="nav flex-column nav-pills">
+        <% if active == "top" %>
+        <li class="nav-item"><%= link_to "Top", admin_root_path, :class => "nav-link active" %></li>
+        <li class="nav-item"><%= link_to "Deployment", admin_deploy_index_path, :class => "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Pod", admin_pod_path, :class => "nav-link" %></li>
+        <% elsif active == "deploy" %>
+        <li class="nav-item"><%= link_to "Top", admin_root_path, :class => "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Deployment", admin_deploy_index_path, :class => "nav-link active" %></li>
+        <li class="nav-item"><%= link_to "Pod", admin_pod_path, :class => "nav-link" %></li>
+        <% else %>
+        <li class="nav-item"><%= link_to "Top", admin_root_path, :class => "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Deployment", admin_deploy_index_path, :class => "nav-link" %></li>
+        <li class="nav-item"><%= link_to "Pod", admin_pod_path, :class => "nav-link active" %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-10">

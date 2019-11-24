@@ -22,6 +22,8 @@ class DeployController < ApplicationController
       @create.is_delete = true
       @create.is_recognize = false
 
+      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+
       resource = K8s::Resource.new(
         apiVersion: 'apps/v1',
         kind: 'Deployment',
@@ -60,20 +62,41 @@ class DeployController < ApplicationController
           }
         }
       )
-      client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-      #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
 
-      client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+      begin
+        client.api('apps/v1').resource('deployments', namespace: current_user.username).create_resource(resource)
+        begin
+          expose_resource = K8s::Resource.new(
+            kind: 'Service',
+            apiVersion: 'v1',
+            metadata: {
+              namespace: current_user.username,
+              name: "#{name}"
+            },
+            spec: {
+              ports: [
+                name: "#{name}",
+                port: "#{port}".to_i,
+                protocol: "TCP"
+              ],
+              type: "NodePort",
+              selector: {
+                app: "#{name}"
+              }
+            }
+          )
+          client.api('v1').resource('services').create_resource(expose_resource)
+          @create.save
 
-      @expose = system("kubectl --namespace=#{current_user.username} expose --type NodePort --port #{port} deployment #{name}")
+          text = "<ul><li>image: #{create_params[:image]}</li><li>name: #{create_params[:name]}</li><li>port: #{create_params[:port]}</li></ul>"
+          flash.now[:success] = text
 
-      if @expose
-        @create.save
-
-        text = "<ul><li>image: #{create_params[:image]}</li><li>name: #{create_params[:name]}</li><li>port: #{create_params[:port]}</li></ul>"
-        flash.now[:success] = text
-
-        render 'create/new', group: @repo
+          render 'create/new', group: @repo
+        rescue K8s::Error::Conflict => e
+          conflict_message(name, @repo)
+        end
+      rescue K8s::Error::Conflict => e
+        conflict_message(name, @repo)
       end
     else
       render 'create/new', group: @repo
@@ -85,14 +108,18 @@ class DeployController < ApplicationController
     deployment = params[:deployment]
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-    @deploy = client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
-    @service = system("kubectl --namespace=#{current_user.username} delete svc #{deployment}")
-
-    if @service
-      deploy = Create.where(:deploy => deployment, :space => current_user.username).first
-      deploy.delete
+    begin
+      client.api('apps/v1').resource('deployments', namespace: current_user.username).delete("#{deployment}")
+      begin
+        client.api('v1').resource('services', namespace: current_user.username).delete("#{deployment}")
+        deploy = Create.where(:deploy => deployment, :space => current_user.username).first
+        deploy.delete
+      rescue K8s::Error => e
+          render :text => e.message, :status => 500
+      end
+    rescue K8s::Error
+      render :text => e.message, :status => 500
     end
-
   end
 
   #デプロイの除外申請
@@ -106,5 +133,12 @@ class DeployController < ApplicationController
   private
   def create_params
     params.require(:create).permit(:image, :name, :port)
+  end
+
+  def conflict_message(name, repo)
+    text = "Conflictが発生しました<ul><li>Deployment \"#{name}\" は既に存在します</li></ul>"
+    flash.now[:warning] = text
+
+    render 'create/new', group: repo
   end
 end
