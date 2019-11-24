@@ -26,6 +26,7 @@ class Users::SessionsController < Devise::SessionsController
       if count.count == 0
         system("kubectl create namespace #{current_username}")
         create_rbac(client, current_username)
+        create_quota(client, current_username)
       end
 
       config = YAML.load_file(File.join(Rails.root, "config", "ldap.yml"))['admin']
@@ -117,5 +118,25 @@ class Users::SessionsController < Devise::SessionsController
       ]
     )
     client.api('rbac.authorization.k8s.io/v1').resource('rolebindings').create_resource(rolebinding)
+  end
+
+  def create_quota(client, current_username)
+    quota = K8s::Resource.new(
+      apiVersion: 'v1',
+      kind: 'ResourceQuota',
+      metadata: {
+        name: 'compute-resources',
+        namespace: "#{current_username}"
+      },
+      spec: {
+        hard: {
+          "requests.cpu": "1",
+          "requests.memory": "1Gi",
+          "limits.cpu": "1",
+          "limits.memory": "1Gi"
+        }
+      }
+    )
+    client.api('v1').resource('resourcequotas', namespace: current_username).create_resource(quota)
   end
 end
