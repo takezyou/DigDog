@@ -57,14 +57,14 @@ class StatusController < ApplicationController
     @domains = []
     domain_list.each do |domain|
       hash = domain.to_h
-      name = hash.dig(:metadata, :name)
+      name = hash.dig(:spec, :rules)[0].dig(:http, :paths)[0].dig(:backend, :serviceName)
       hostname = hash.dig(:spec, :rules)[0].dig(:host)
 
       @domains.push({
                             :name => name,
                             :hostname => hostname,
                         })
-      p hostname
+      p hash
     end
   end
 

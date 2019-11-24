@@ -135,6 +135,10 @@
             <tr>
               <th><%= domain[:name] %></th> <!-- deployment名 -->
               <th><%= domain[:hostname] %></th>
+              <th>
+                <!-- 削除ボタン -->
+                <button class="btn btn-primary btn-sm" id="delete" data="<%=  %>">Delete</button>
+              </th>
             </tr>
           <% end %>
           </tbody>
