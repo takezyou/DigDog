@@ -15,6 +15,10 @@ class DeployController < ApplicationController
       image = create_params[:image]
       name = create_params[:name]
       port = create_params[:port]
+      request_memory = create_params[:request_memory]
+      limit_memory = create_params[:limit_memory]
+      request_cpu = create_params[:request_cpu]
+      limit_cpu = create_params[:limit_cpu]
 
       @create.deploy = name
       @create.space = current_user.username
@@ -54,6 +58,16 @@ class DeployController < ApplicationController
               containers: [
                 name: "#{name}",
                 image: "registry.ie.u-ryukyu.ac.jp/#{image}",
+                resources: {
+                  requests: {
+                    memory: "#{request_memory}Mi",
+                    cpu: "#{request_cpu}"
+                  },
+                  limits: {
+                    memory: "#{limit_memory}Mi",
+                    cpu: "#{limit_cpu}"
+                  }
+                },
                 ports: [
                   containerPort: "#{port}".to_i
                 ]
@@ -132,7 +146,7 @@ class DeployController < ApplicationController
 
   private
   def create_params
-    params.require(:create).permit(:image, :name, :port)
+    params.require(:create).permit(:image, :name, :port, :request_memory, :limit_memory, :request_cpu, :limit_cpu)
   end
 
   def conflict_message(name, repo)

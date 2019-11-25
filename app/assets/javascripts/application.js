@@ -19,3 +19,5 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require turbolinks
+//= require c3
+//= require d3
