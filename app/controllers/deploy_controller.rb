@@ -146,7 +146,7 @@ class DeployController < ApplicationController
 
   private
   def create_params
-    params.require(:create).permit(:image, :name, :port)
+    params.require(:create).permit(:image, :name, :port, :request_memory, :limit_memory, :request_cpu, :limit_cpu)
   end
 
   def conflict_message(name, repo)
