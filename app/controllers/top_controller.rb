@@ -27,19 +27,22 @@ class TopController < ApplicationController
     usage_cpu = 0
     pods_top_list.each do |top|
       used = top.to_h
-      content = used.dig(:containers, 0, :usage)
-      memory = content.dig(:memory)
-      byte = memory.slice!(/Ki|Mi/)
-      if byte == "Ki"
-        m = memory.to_f / 1024
-        usage_memory += m
-      elsif byte == "Mi"
-        m = memory.to_f
-        usage_memory += m
+      puts used
+      if used.dig(:containers, 0)
+        content = used.dig(:containers, 0, :usage)
+        memory = content.dig(:memory)
+        byte = memory.slice!(/Ki|Mi/)
+        if byte == "Ki"
+          m = memory.to_f / 1024
+          usage_memory += m
+        elsif byte == "Mi"
+          m = memory.to_f
+          usage_memory += m
+        end
+        cpu = content.dig(:cpu)
+        milli = cpu.slice!(/m/).to_f
+        usage_cpu += milli
       end
-      cpu = content.dig(:cpu)
-      milli = cpu.slice!(/m/).to_f
-      usage_cpu += milli
     end 
     @usage_memory = "#{usage_memory}Mi"
     @usage_cpu = "#{usage_cpu}m"

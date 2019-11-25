@@ -13,26 +13,18 @@ class Create < ApplicationRecord
                     message: "の値は1〜65535の範囲で入力してください。(入力された値:%{value})" }
   validates :request_memory,
     presence: { message: ":必須項目です" },
-    numericality: { only_integer: true,
-                    greater_than: 0,
-                    less_than_or_equal_to: 65535,
-                    message: "の値は1〜65535の範囲で入力してください。(入力された値:%{value})" }
+    numericality: { greater_than: 0,
+                    message: "の値は整数で入力してください。(入力された値:%{value})" }
   validates :limit_memory,
     presence: { message: ":必須項目です" },
-    numericality: { only_integer: true,
-                    greater_than: 0,
-                    less_than_or_equal_to: 65535,
-                    message: "の値は1〜65535の範囲で入力してください。(入力された値:%{value})" }
+    numericality: { greater_than: 0,
+                    message: "の値は整数で入力してください。(入力された値:%{value})" }
   validates :request_cpu,
     presence: { message: ":必須項目です" },
-    numericality: { only_integer: true,
-                    greater_than: 0,
-                    less_than_or_equal_to: 65535,
-                    message: "の値は1〜65535の範囲で入力してください。(入力された値:%{value})" }
+    numericality: { greater_than: 0,
+                    message: "の値は小数で入力してください。(入力された値:%{value})" }
   validates :limit_cpu,
     presence: { message: ":必須項目です" },
-    numericality: { only_integer: true,
-                    greater_than: 0,
-                    less_than_or_equal_to: 65535,
-                    message: "の値は1〜65535の範囲で入力してください。(入力された値:%{value})" }
+    numericality: { greater_than: 0,
+                    message: "の値は小数で入力してください。(入力された値:%{value})" }
 end
