@@ -31,6 +31,28 @@ $(document).on 'turbolinks:load', ->
     else
         e.preventDefault()
 
+
+  $('button#delete_domain').on 'click', ->
+    e = $(@)
+    id = e.attr('data')
+    check = confirm 'Domain "'+id+'" を削除しますか？'
+
+    if check == true
+      $.ajax
+        url: '/delete_domain'
+        type: 'POST'
+        data: {'domain': id, '_method': 'DELETE'}
+      .done ->
+        if e.parents('tr').length == 1
+          $('#domain').html('<p>対象が存在しません</p>')
+        else
+          e.parents('tr').remove()
+      .fail ->
+        alert 'エラーが発生しました。\n時間をおいてもう一度お試しください。'
+    else
+      e.preventDefault()
+
+
   $('button#expand').on 'click', ->
     e = $(@)
     id = e.attr('data')

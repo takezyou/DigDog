@@ -156,3 +156,4 @@ config/k8s_config.yml
 config/ldap.yml
 config/local_k8s_config.yml
 config/password.yml
+.idea

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   post 'create' => 'deploy#create'
   get 'delete', controller: 'application', action: 'render_404'
   delete 'delete' => 'deploy#delete'
+  get 'setting_domain' => 'domain#create'
+  delete 'delete_domain' => 'domain#delete'
   get 'expand', controller: 'application', action: 'render_404'
   post 'expand' => 'deploy#expand'
 end
