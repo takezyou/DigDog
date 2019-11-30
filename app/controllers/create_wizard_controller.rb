@@ -2,9 +2,9 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-class CreateController < ApplicationController
+class CreateWizardController < ApplicationController
   before_action :authenticate_user!
-  attr_accessor :repo, :client
+  attr_accessor :repo
 
   def initialize()
     token = get_token()
@@ -13,20 +13,53 @@ class CreateController < ApplicationController
     super
   end
 
-  def new
-    if @error != nil
-      render 'error', group: @error
-    end
-
+  def index
+    @create = Create.new
     if @repo == nil
       token = get_token()
       @repo = get_repo(token)
     end
-
-    @create = Create.new
   end
 
-  def error
+  def step2
+    @create = Create.new
+    parameter = params[:create]
+    session[:count] = parameter[:count]
+    (parameter[:count].to_i).times { |num|
+      session["image-#{num}".to_sym] = parameter["#{num}"][:image]
+    }
+    @result = []
+  end
+
+  def step3
+    count = session[:count].to_i
+    parameter = params[:create]
+    attributes = []
+    (count+1).times.map { |num|
+      session["name-#{num}".to_sym] = parameter["#{num}"][:name]
+      session["port-#{num}".to_sym] = parameter["#{num}"][:port]
+      attributes.append({
+          "image" => session["image-#{num}".to_sym],
+          "name" => session["name-#{num}".to_sym],
+          "port" => session["port-#{num}".to_sym]
+      })
+    }
+    temp = attributes.map do |value|
+      Create.new(value)
+    end
+    flag = false
+    @results = {}
+    temp.map.with_index do |tmp, index|
+      if !tmp.valid?
+        flag = true
+        @results[index] = tmp.errors
+      end
+    end
+    if flag = true
+      render 'create_wizard/step2', group: @results
+    else
+      render 'create_wizard/step3'
+    end
   end
 
   def get_token

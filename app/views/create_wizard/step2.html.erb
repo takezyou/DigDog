@@ -1,0 +1,71 @@
+<% @page_title = "新規作成 | 必要事項の入力" %>
+
+<%= javascript_include_tag 'create_wizard/step2' %>
+<div class="container">
+  <h4>Step2: 必要事項の入力</h4>
+  <div id="hidden"><%= session[:count] %></div>
+  <% if @results.present? %>
+  <!-- バリデーションのエラーがあった時 -->
+  <div id="error_explanation" class="alert alert-danger">
+    <% @results.each do |key,value| %>
+    Deploymet<%= key %>
+    <ul>
+      <% value.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+    <% end %>
+  </div>
+  <!-- バリデーションのエラーがあった時 ここまで-->
+  <% end %>
+  <%= form_with(model: @create, url: create_wizard_step3_path, local: true) do |f| %>
+    <% for num in 0..session[:count].to_i do %>
+      <h5 class="col-12">Deploymet<%= num %></h5>
+      <!-- イメージ選択 -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-1">
+            <%= f.label :image, 'Image:', :class => 'control-label' %>
+          </div>
+          <div class="col-md-11">
+            <%= f.label :image_name, session["image-#{num}".to_sym] %>
+          </div>
+        </div>
+      </div>
+      <!-- イメージ選択 ここまで -->
+
+      <!-- Podの名前 -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-1">
+            <%= f.label :name, 'Name:', class: 'control-label' %>
+          </div>
+          <div class="col-md-4">
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+          <span class="col-md-6"></span>
+        </div>
+      </div>
+      <!-- Podの名前 ここまで -->
+
+      <!-- Port -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-1">
+            <%= f.label :port, 'Port:', class: 'control-label' %>
+          </div>
+          <div class="col-md-4">
+            <%= f.phone_field :port, class: 'form-control' %>
+          </div>
+          <span class="col-md-6"></span>
+        </div>
+      </div>
+      <!-- Port ここまで -->
+      <hr>
+    <% end %>
+    <div class="form-inline">
+      <a href="<%= create_wizard_path %>" class="btn btn-primary" role="button">戻る</a>
+      <%= f.submit "次へ", class: "btn btn-primary ml-auto" %>
+    </div>
+  <% end %>
+</div>
