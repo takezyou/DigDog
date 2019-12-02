@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   post 'create_wizard/step2' => 'create_wizard#step2'
   get 'create_wizard/step3', controller: 'application', action: 'render_404'
   post 'create_wizard/step3' => 'create_wizard#step3'
+  get 'create_wizard/step3', controller: 'application', action: 'render_404'
+  post 'create_wizard/done' => 'create_wizard#done'  
 end

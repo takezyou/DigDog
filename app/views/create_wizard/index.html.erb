@@ -4,22 +4,13 @@
 <div class="container">
   <h4>Step1: イメージの選択</h4>
   <%= form_with(model: @create, url: create_wizard_step2_path, local: true) do |f| %>
-  <%= f.hidden_field :count, value: 0 %>
-  <div id="form-contents" class="offset-md-1">
-    <div id="form-content[0]">
-      <div class="form-inline">
-        <%= f.label :image, 'Image:', :class => 'control-label' %>
-        <span></span>
-        <%= f.select :image, options_for_select(@repo), {}, class: 'form-control' %>
-        <div class="d-flex">
-          <button type="button" id="minus" class="btn btn-danger shadow">-</button>
-        </div>
-      </div>
-      <hr>
-    </div>
+  <div id="form-contents" class="">
+    <%= f.fields_for :forms do |form| %>
+      <%= render 'form_fields', f: form , group: @repo %>
+    <% end %>
   </div>
   <div class="form-inline float-right">
-    <button type="button" id="plus" class="btn btn-primary rounded-circle shadow">+</button>
+    <%= link_to_add_association '+', f, :forms, id: "plus", class: "btn btn-primary rounded-circle shadow"  %>
     <span></span>
     <%= f.submit "次へ", class: "btn btn-primary" %>
   </div>

@@ -1,5 +1,7 @@
 class Create < ApplicationRecord
   attr_accessor :image, :name, :port
+  has_many :forms
+  accepts_nested_attributes_for :forms
 
   validates :image, presence: true
   validates :name, presence: { message: ":必須項目です" }, format: {

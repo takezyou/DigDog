@@ -3,4 +3,56 @@
 <div class="container">
   <h4>Step3: 最終確認</h4>
   <p>以下の条件で作成します</p>
+  <%= form_with(model: @create, url: create_wizard_done_path, local: true) do |f| %>
+    <% for num in 0..(session[:count].to_i - 1) do %>
+    <h5 class="col-12">Deploymet<%= num %></h5>
+    <!-- イメージ選択 -->
+    <div class="form-group offset-md-1">
+      <div class="form-inline">
+        <div class="col-md-1">
+          <%= f.label :image, 'Image:', :class => 'control-label' %>
+        </div>
+        <div class="col-md-11">
+          <%= f.label :image_name, session["image-#{num}".to_sym] %>
+        </div>
+      </div>
+      <input value="<%= session["image-#{num}".to_sym] %>" type="hidden" name="create[<%= num %>][image]">
+    </div>
+    <!-- イメージ選択 ここまで -->
+
+    <!-- Podの名前 -->
+    <div class="form-group offset-md-1">
+      <div class="form-inline">
+        <div class="col-md-1">
+          <%= f.label :name, 'Name:', class: 'control-label' %>
+        </div>
+        <div class="col-md-11">
+          <%= f.label :name, session["name-#{num}".to_sym] %>
+        </div>
+      </div>
+      <input value="<%= session["name-#{num}".to_sym] %>" type="hidden" name="create[<%= num %>][name]">
+    </div>
+    <!-- Podの名前 ここまで -->
+
+    <!-- Port -->
+    <div class="form-group offset-md-1">
+      <div class="form-inline">
+        <div class="col-md-1">
+          <%= f.label :port, 'Port:', class: 'control-label' %>
+        </div>
+        <div class="col-md-11">
+          <%= f.label :port, session["port-#{num}".to_sym] %>
+        </div>
+      </div>
+      <input value="<%= session["port-#{num}".to_sym] %>" type="hidden" name="create[<%= num %>][port]">
+    </div>
+    <!-- Port ここまで -->
+    <hr>
+
+    <% end %>
+    <div class="form-inline">
+      <a href="<%= create_wizard_path %>" class="btn btn-primary" role="button">戻る</a>
+      <%= f.submit "次へ", class: "btn btn-primary ml-auto" %>
+    </div>
+  <% end %>
 </div>

@@ -18,8 +18,20 @@
   </div>
   <!-- バリデーションのエラーがあった時 ここまで-->
   <% end %>
+  <% if @conflict.present? %>
+  <!-- conflictしたとき  -->
+  <div class="alert alert-danger">
+    Conflictが発生しました。<br>以下の名前のDeploymentは既に存在します。
+    <ul>
+    <% @conflict.each do |conflict| %>
+      <li><%= conflict %></li>
+    <% end %>
+    </ul>
+  </div>
+  <!-- conflictしたとき ここまで -->
+  <% end %>
   <%= form_with(model: @create, url: create_wizard_step3_path, local: true) do |f| %>
-    <% for num in 0..session[:count].to_i do %>
+    <% for num in 0..(session[:count].to_i - 1) do %>
       <h5 class="col-12">Deploymet<%= num %></h5>
       <!-- イメージ選択 -->
       <div class="form-group offset-md-1">
@@ -41,7 +53,7 @@
             <%= f.label :name, 'Name:', class: 'control-label' %>
           </div>
           <div class="col-md-4">
-            <%= f.text_field :name, class: 'form-control' %>
+            <input class="form-control" type="text" name="create[<%= num %>][name]" id="create_name">
           </div>
           <span class="col-md-6"></span>
         </div>
@@ -55,7 +67,7 @@
             <%= f.label :port, 'Port:', class: 'control-label' %>
           </div>
           <div class="col-md-4">
-            <%= f.phone_field :port, class: 'form-control' %>
+            <input class="form-control" type="tel" name="create[<%= num %>][port]" id="create_port">
           </div>
           <span class="col-md-6"></span>
         </div>
