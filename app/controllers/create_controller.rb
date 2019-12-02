@@ -23,22 +23,11 @@ class CreateController < ApplicationController
       @repo = get_repo(token)
     end
 
-    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
-    #@client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "local_k8s_config.yml")))
-    pods = client.api('v1').resource('pods', namespace: current_user.username).list
-    if pods.count > 2
-      @error = "Podの作成数の上限を超えています。(上限:3、現在:#{pods.count})"
-      render 'error', group: @error
-    end
-
     @create = Create.new
   end
 
   def error
   end
-
-  #private
-
 
   def get_token
     uri = URI('https://gitlab.ie.u-ryukyu.ac.jp/jwt/auth?service=container_registry&scope=registry:catalog:*')

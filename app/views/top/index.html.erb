@@ -1,5 +1,369 @@
 <div class="container">
-  <h2>top#index</h2>
+  <div class="card mb-3 mt-3">
+    <div class="card-body">
+      <h5 class="card-title">Usage</h5>
+      <div class="row justify-content-center">
+        <div id="chart-usage-memory"></div>
+        <div id="chart-usage-cpu"></div>
+        <div class="d-flex align-items-center ml-4">
+          <table class="table-borderless">
+            <tbody>
+              <tr>
+                <td>
+                  <i class="material-icons request-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  Memory
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @usage_memory %></span>
+                </td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="material-icons limits-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  CPU
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @usage_cpu %></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>トップページの予定</p>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Memory Quotas</h5>
+      <div class="row justify-content-center">
+        <div id="chart-memory-request"></div>
+        <div id="chart-memory-limit"></div>
+        <div class="d-flex align-items-center ml-4">
+          <table class="table-borderless">
+            <tbody>
+              <tr>
+                <td>
+                  <i class="material-icons request-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  Requests
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @used_requests_memory %></span>
+                </td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="material-icons limits-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  Limits
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @used_limits_memory %></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td class="align-top">
+                  Requests Capacity
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @requests_memory %></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td class="align-top">
+                  Limits Capacity
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @limits_memory %></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">CPU Quotas</h5>
+      <div class="row justify-content-center">
+        <div id="chart-cpu-request"></div>
+        <div id="chart-cpu-limit"></div>
+        <div class="d-flex align-items-center ml-4">
+          <table class="table-borderless">
+            <tbody>
+              <tr>
+                <td>
+                  <i class="material-icons request-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  Requests
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @used_requests_cpu %></span>
+                </td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="material-icons limits-color ml-3">stop</i>
+                </td>
+                <td class="align-top">
+                  Limits
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @used_limits_cpu %></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td class="align-top">
+                  Requests Capacity
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @requests_cpu %></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td class="align-top">
+                  Limits Capacity
+                </td>
+                <td class="align-top">
+                  <span class="ml-3"><%= @limits_cpu %></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script type="text/javascript">
+var limits_memory = <%= @graph_limits_memory %>;
+var requests_memory = <%= @graph_requests_memory %>;
+var limits_cpu = <%= @graph_limits_cpu %>;
+var requests_cpu = <%= @graph_requests_cpu %>;
+var usage_memory = <%= @graph_usage_memory %>;
+var usage_cpu = <%= @graph_usage_cpu %>;
+
+var chart = c3.generate({
+    bindto: '#chart-usage-memory',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', usage_memory],
+        ['data2', 100-usage_memory]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#00c752',
+        data2: '#ddd'
+      },
+    },
+    padding: {top: 0, right: 0, bottom: 0, left: 0},
+});
+
+var chart = c3.generate({
+    bindto: '#chart-usage-cpu',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', usage_cpu],
+        ['data2', 100-usage_cpu]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#326de6',
+        data2: '#ddd'
+      },
+    },
+    padding: {top: 0, right: 0, bottom: 0, left: 0},
+});
+
+var chart = c3.generate({
+    bindto: '#chart-memory-request',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', requests_memory],
+        ['data2', 100-requests_memory]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#00c752',
+        data2: '#ddd',
+      },
+    }
+});
+
+var chart = c3.generate({
+    bindto: '#chart-memory-limit',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', limits_memory],
+        ['data2', 100-limits_memory]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#326de6',
+        data2: '#ddd'
+      },
+    },
+    padding: {top: 0, right: 0, bottom: 0, left: 0},
+});
+
+var chart = c3.generate({
+    bindto: '#chart-cpu-request',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', requests_cpu],
+        ['data2', 100-requests_cpu]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#00c752',
+        data2: '#ddd',
+      },
+    }
+});
+
+var chart = c3.generate({
+    bindto: '#chart-cpu-limit',
+    size: {
+      width: 280,
+      height: 280,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    transition: {duration: 350},
+    donut: {
+      label: {
+        format: function (value, ratio, id) {
+          return `${Math.round(value)}%`;
+        }
+      },
+    },
+    data: {
+      columns: [
+        ['data1', limits_cpu],
+        ['data2', 100-limits_cpu]
+      ],
+      type: 'donut',
+      colors: {
+        data1: '#326de6',
+        data2: '#ddd'
+      },
+    },
+    padding: {top: 0, right: 0, bottom: 0, left: 0},
+});
+</script>

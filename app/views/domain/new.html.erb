@@ -1,0 +1,34 @@
+<% @page_title = "ドメインの設定" %>
+
+<div class="container">
+
+  <%= form_with(model: @domain, url: '/setting_domain', local: true) do |f| %>
+
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :name, 'Domain name: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.text_field :name, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :svc, 'Service name: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.text_field :svc, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'port number : ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.text_field :port, class: 'form-control' %>
+      </div>
+    </div>
+
+    <%= f.submit "Set Domain"%>
+  <% end %>
+
+</div>

@@ -24,8 +24,9 @@ class Users::SessionsController < Devise::SessionsController
       end
       count = namespaces.select{|namespace| namespace == current_username}
       if count.count == 0
-        system("kubectl create namespace #{current_username}")
+        create_namespace(client, current_username)
         create_rbac(client, current_username)
+        create_quota(client, current_username)
       end
 
       config = YAML.load_file(File.join(Rails.root, "config", "ldap.yml"))['admin']
@@ -67,13 +68,27 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
+  def create_namespace(client, current_username)
+    resource = K8s::Resource.new(
+      apiVersion: 'v1',
+      kind: 'Namespace',
+      metadata: {
+        name: "#{current_username}",
+        labels: {
+          name: "#{current_username}"
+        }
+      }
+    )
+    client.api('v1').resource('namespaces').create_resource(resource)
+  end
+
   def create_rbac(client, current_username)
     serviceaccount = K8s::Resource.new(
       apiVersion: 'v1',
       kind: 'ServiceAccount',
       metadata: {
         name: "#{current_username}",
-        namespace: "#{current_username}" 
+        namespace: "#{current_username}"
       }
     )
     client.api('v1').resource('serviceaccounts').create_resource(serviceaccount)
@@ -117,5 +132,25 @@ class Users::SessionsController < Devise::SessionsController
       ]
     )
     client.api('rbac.authorization.k8s.io/v1').resource('rolebindings').create_resource(rolebinding)
+  end
+
+  def create_quota(client, current_username)
+    quota = K8s::Resource.new(
+      apiVersion: 'v1',
+      kind: 'ResourceQuota',
+      metadata: {
+        name: 'compute-resources',
+        namespace: "#{current_username}"
+      },
+      spec: {
+        hard: {
+          "requests.cpu": "1",
+          "requests.memory": "1Gi",
+          "limits.cpu": "1",
+          "limits.memory": "1Gi"
+        }
+      }
+    )
+    client.api('v1').resource('resourcequotas', namespace: current_username).create_resource(quota)
   end
 end

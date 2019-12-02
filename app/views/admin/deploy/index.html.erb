@@ -1,0 +1,66 @@
+<% @page_title = "Deployment" %>
+<%= javascript_include_tag 'admin/deploy'%>
+
+<%= render 'admin/nav_header', active: 'deploy' %>
+<h3>承認待ちリスト</h3>
+<!-- 検索欄 -->
+<nav class="navbar">
+  <form class="form-inline">
+    <div class="input-group">
+      <input type="text" class="form-control">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary">Find</button>
+      </div>
+    </div>
+  </form>
+</nav>
+<!-- 検索欄 ここまで-->
+<!-- テーブル -->
+<div class="table-responsive" id="deploy" >
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th></th>
+        <th><div align="center">Namespace</div></th>
+        <th><div align="center">Name</div></th>
+        <th><div align="center">Image</div></th>
+        <th><div align="center">Port</div></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @merged.each do |deploy| %>
+        <tr>
+          <% if deploy[4] == false && deploy[5] == true %>
+            <!-- 承認済み -->
+            <th><div align="center"><span class="badge badge-success">承認済み</span></div><th>
+          <% elsif deploy[4] == false && deploy[5] == false %>
+            <!-- 承認待ち -->
+            <th><div align="center"><span class="badge badge-primary">承認待ち</span></div></th>
+          <% elsif deploy[4] == true && deploy[5] == false %>
+            <th><div align="center"><span class="badge badge-secondary">未申請</span></div></th>
+          <% elsif deploy[4] == nil && deploy[5] == nil %>
+            <!-- エラー -->
+            <th><div align="center"><span class="badge badge-danger" data-toggle="tooltip" title="データベースと一致しません">Error</span></div></th>
+          <% end %>
+          <th><div align="center"><%= deploy[1] %></div></th>
+          <th><div align="center"><%= deploy[0] %></div></th>
+          <th><div align="center"><%= deploy[2] %></div></th>
+          <th><div align="center"><%= deploy[3] %></div></th>
+          <th></th>
+          <% if deploy[4] == nil && deploy[5] == nil %>
+            <th></th>
+          <% else %>
+            <th>
+              <%= link_to "edit", edit_admin_deploy_path(deploy[6]), :class => "btn btn-primary btn-sm" %>
+            </th>
+          <!-- 承認済み ここまで -->
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<!-- テーブル ここまで -->
+<%= render 'admin/nav_footer' %>

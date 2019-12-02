@@ -1,4 +1,5 @@
 <% @page_title = "新規作成" %>
+<%= javascript_include_tag 'create' %>
 
 <div class="container" style="width: 100%; max-width: 500px; padding: 15px; margin: 0 auto;">
 
@@ -14,7 +15,7 @@
     <!-- バリデーションのエラーがあった時 ここまで-->
   <% end %>
 
-  <% if @expose %>
+  <% if flash[:success] %>
   <!-- 成功時メッセージ -->
     <div id="success_alert" class="alert alert-success alert-dismissable">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -23,6 +24,16 @@
       現在の状態は<%= link_to "こちら", status_show_path %>で確認してください。
     </div>
   <!-- 成功時メッセージ ここまで -->
+  <% end %>
+
+  <% if flash[:warning] %>
+  <!-- conflict時メッセージ -->
+    <div id="conflict_alert" class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%= flash[:warning].html_safe %>
+      現在の状態は<%= link_to "こちら", status_show_path %>で確認してください。
+    </div>
+  <!-- conflict時メッセージ ここまで-->
   <% end %>
 
   <%= form_with(model: @create, url: '/create', local: true) do |f| %>
@@ -55,6 +66,48 @@
       </div>
     </div>
     <!-- Port ここまで -->
+
+    <!-- Requests memory -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Requests memory: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :request_memory, class: 'form-control' %>
+        <span class="m-1">Mi</span>
+      </div>
+    </div>
+    <!-- Requests memory ここまで -->
+
+    <!-- Limits memory -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Limits memory: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :limit_memory, class: 'form-control' %>
+        <span class="m-1">Mi</span>
+      </div>
+    </div>
+    <!-- Limits memory ここまで -->
+
+    <!-- Requests cpu-->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Requests cpu: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :request_cpu, class: 'form-control' %>
+      </div>
+    </div>
+    <!-- Requests cpu ここまで -->
+
+    <!-- Limits cpu -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Limits cpu: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :limit_cpu, class: 'form-control' %>
+      </div>
+    </div>
+    <!-- Limits cpu ここまで -->
 
     <%= f.submit "Create", class: "form-control btn-primary" %>
   <% end %>

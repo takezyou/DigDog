@@ -6,8 +6,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "console#index"
-    get 'deploy' => "console#deploy"
-    get 'admin' => "console#admin"
+    resources :deploy, :except => [:new, :create, :destroy]
+    get 'pod' => "console#pod"
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
@@ -19,6 +19,16 @@ Rails.application.routes.draw do
   post 'create' => 'deploy#create'
   get 'delete', controller: 'application', action: 'render_404'
   delete 'delete' => 'deploy#delete'
+  get 'setting_domain' => 'domain#new'
+  post 'setting_domain' => 'domain#create'
+  delete 'delete_domain' => 'domain#delete'
   get 'expand', controller: 'application', action: 'render_404'
   post 'expand' => 'deploy#expand'
+  get 'create_wizard' => 'create_wizard#index'
+  get 'create_wizard/step2', controller: 'application', action: 'render_404'
+  post 'create_wizard/step2' => 'create_wizard#step2'
+  get 'create_wizard/step3', controller: 'application', action: 'render_404'
+  post 'create_wizard/step3' => 'create_wizard#step3'
+  get 'create_wizard/step3', controller: 'application', action: 'render_404'
+  post 'create_wizard/done' => 'create_wizard#done'  
 end
