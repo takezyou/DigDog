@@ -18,3 +18,6 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require cocoon
+//= require turbolinks
+//= require c3
+//= require d3
