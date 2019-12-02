@@ -21,4 +21,11 @@ Rails.application.routes.draw do
   delete 'delete' => 'deploy#delete'
   get 'expand', controller: 'application', action: 'render_404'
   post 'expand' => 'deploy#expand'
+  get 'create_wizard' => 'create_wizard#index'
+  get 'create_wizard/step2', controller: 'application', action: 'render_404'
+  post 'create_wizard/step2' => 'create_wizard#step2'
+  get 'create_wizard/step3', controller: 'application', action: 'render_404'
+  post 'create_wizard/step3' => 'create_wizard#step3'
+  get 'create_wizard/step3', controller: 'application', action: 'render_404'
+  post 'create_wizard/done' => 'create_wizard#done'  
 end

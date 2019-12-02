@@ -4,7 +4,7 @@
 
 # https://qiita.com/u-dai/items/d43e932cd6d96c09b69aを参考に作成
 
-$(document).on 'turbolinks:load', ->
+$(window).on 'load', ->
   # CSRF対策
   $.ajaxSetup
     headers: {
