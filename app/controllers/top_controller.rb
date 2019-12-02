@@ -1,4 +1,6 @@
 class TopController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     current_username = current_user.username
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
@@ -7,7 +9,7 @@ class TopController < ApplicationController
     pods_top_list = client.api('metrics.k8s.io/v1beta1').resource('pods', namespace: current_user.username).list
     hard = resourcequota_list[0].dig(:status, :hard).to_h
     used = resourcequota_list[0].dig(:status, :used).to_h
-    @limits_memory = hard[:"limits.memory"] 
+    @limits_memory = hard[:"limits.memory"]
     @limits_cpu = hard[:"limits.cpu"]
     @requests_memory = hard[:"requests.memory"]
     @requests_cpu = hard[:"requests.cpu"]
@@ -43,7 +45,7 @@ class TopController < ApplicationController
         milli = cpu.slice!(/m/).to_f
         usage_cpu += milli
       end
-    end 
+    end
     @usage_memory = "#{usage_memory}Mi"
     @usage_cpu = "#{usage_cpu}m"
     @graph_usage_memory = (usage_memory / (@limits_memory.to_f * 1000)) * 100

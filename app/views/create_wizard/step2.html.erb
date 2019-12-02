@@ -36,10 +36,10 @@
       <!-- イメージ選択 -->
       <div class="form-group offset-md-1">
         <div class="form-inline">
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= f.label :image, 'Image:', :class => 'control-label' %>
           </div>
-          <div class="col-md-11">
+          <div class="col-md-10">
             <%= f.label :image_name, session["image-#{num}".to_sym] %>
           </div>
         </div>
@@ -49,13 +49,14 @@
       <!-- Podの名前 -->
       <div class="form-group offset-md-1">
         <div class="form-inline">
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= f.label :name, 'Name:', class: 'control-label' %>
           </div>
           <div class="col-md-4">
             <input class="form-control" type="text" name="create[<%= num %>][name]" id="create_name">
+            <span class="m-1">(Deploymetの名前)</span>
           </div>
-          <span class="col-md-6"></span>
+          <span class="col-md-5"></span>
         </div>
       </div>
       <!-- Podの名前 ここまで -->
@@ -63,16 +64,76 @@
       <!-- Port -->
       <div class="form-group offset-md-1">
         <div class="form-inline">
-          <div class="col-md-1">
+          <div class="col-md-2">
             <%= f.label :port, 'Port:', class: 'control-label' %>
           </div>
           <div class="col-md-4">
             <input class="form-control" type="tel" name="create[<%= num %>][port]" id="create_port">
           </div>
-          <span class="col-md-6"></span>
+          <span class="col-md-5"></span>
         </div>
       </div>
       <!-- Port ここまで -->
+
+      <!-- Requests memory -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :request_memory, 'Requests memory: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-7">
+            <%= f.phone_field :request_memory, class: 'form-control' %>
+            <span class="m-1">MiB (必要最低限欲しいメモリの容量 例: 500MiB)</span>
+          </div>
+          <span class="col-md-2"></span>
+        </div>
+      </div>
+      <!-- Requests memory ここまで -->
+
+      <!-- Limits memory -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :port, 'Limits memory: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-4">
+            <%= f.phone_field :limit_memory, class: 'form-control' %>
+            <span class="m-1">MiB ()</span>
+          </div>
+          <span class="col-md-5"></span>
+        </div>
+      </div>
+      <!-- Limits memory ここまで -->
+
+      <!-- Requests cpu-->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :request_cpu, 'Requests cpu: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-8">
+            <%= f.phone_field :request_cpu, class: 'form-control' %>
+            (必要最低限欲しいCPUのコア数を1000で割った値を入力 例: 0.1)
+          </div>
+          <span class="col-md-1"></span>
+        </div>
+      </div>
+      <!-- Requests cpu ここまで -->
+
+      <!-- Limits cpu -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :limit_cpu, 'Limits cpu: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-4">
+            <%= f.phone_field :limit_cpu, class: 'form-control' %>
+          </div>
+          <span class="col-md-5"></span>
+        </div>
+      </div>
+      <!-- Limits cpu ここまで -->
+
       <hr>
     <% end %>
     <div class="form-inline">
