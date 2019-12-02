@@ -137,6 +137,16 @@ class CreateWizardController < ApplicationController
               containers: [
                 name: "#{name}",
                 image: "registry.ie.u-ryukyu.ac.jp/#{image}",
+                resources: {
+                    requests: {
+                        memory: "#{request_memory}Mi",
+                        cpu: "#{request_cpu}"
+                    },
+                    limits: {
+                        memory: "#{limit_memory}Mi",
+                        cpu: "#{limit_cpu}"
+                    }
+                },
                 ports: [
                   containerPort: "#{port}".to_i
                 ]
