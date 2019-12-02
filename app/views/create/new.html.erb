@@ -1,4 +1,5 @@
 <% @page_title = "新規作成" %>
+<%= javascript_include_tag 'create' %>
 
 <div class="container" style="width: 100%; max-width: 500px; padding: 15px; margin: 0 auto;">
 
@@ -65,6 +66,48 @@
       </div>
     </div>
     <!-- Port ここまで -->
+
+    <!-- Requests memory -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Requests memory: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :request_memory, class: 'form-control' %>
+        <span class="m-1">Mi</span>
+      </div>
+    </div>
+    <!-- Requests memory ここまで -->
+
+    <!-- Limits memory -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Limits memory: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :limit_memory, class: 'form-control' %>
+        <span class="m-1">Mi</span>
+      </div>
+    </div>
+    <!-- Limits memory ここまで -->
+
+    <!-- Requests cpu-->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Requests cpu: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :request_cpu, class: 'form-control' %>
+      </div>
+    </div>
+    <!-- Requests cpu ここまで -->
+
+    <!-- Limits cpu -->
+    <div class="form-group" align="left">
+      <div class="form-inline">
+        <%= f.label :port, 'Limits cpu: ', class: 'control-label' %>
+        <span style="margin: 10px;"></span>
+        <%= f.phone_field :limit_cpu, class: 'form-control' %>
+      </div>
+    </div>
+    <!-- Limits cpu ここまで -->
 
     <%= f.submit "Create", class: "form-control btn-primary" %>
   <% end %>

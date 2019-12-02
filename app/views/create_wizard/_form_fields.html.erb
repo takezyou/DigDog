@@ -1,0 +1,11 @@
+<div class="nested-fields offset-md-1">
+  <div class="form-inline">
+    <%= f.label :image, 'Image:', :class => 'control-label' %>
+    <span></span>
+    <%= f.select :image, options_for_select(@repo), {}, class: 'form-control' %>
+    <div class="d-flex">
+      <%= link_to_remove_association "-", f, id: "minus", class: "btn btn-danger shadow" %>
+    </div>
+  </div>
+  <hr>
+</div>
