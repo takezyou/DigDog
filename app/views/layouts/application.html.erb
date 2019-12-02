@@ -62,6 +62,7 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               <% if user_signed_in? %>
                 <%= link_to "新規作成", create_path, :class => 'dropdown-item' %>
+                <%= link_to "ドメインの設定", setting_domain_path, :class => 'dropdown-item' %>
                 <div class="dropdown-divider"></div>
                 <%= link_to "ユーザー情報", status_user_path, :class => 'dropdown-item' %>
                 <%= link_to "現在の状態", status_show_path, :class => 'dropdown-item' %>

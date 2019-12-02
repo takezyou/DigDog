@@ -52,6 +52,22 @@ class StatusController < ApplicationController
         :is_recognize => recognize
         })
     end
+
+    domain_list = client.api('networking.k8s.io/v1beta1').resource('ingresses', namespace: current_user.username).list
+    @domains = []
+    domain_list.each do |domain|
+      hash = domain.to_h
+      pod_name = hash.dig(:spec, :rules)[0].dig(:http, :paths)[0].dig(:backend, :serviceName)
+      name = hash.dig(:metadata, :name)
+      puts name
+      hostname = hash.dig(:spec, :rules)[0].dig(:host)
+
+      @domains.push({
+                            :pod_name => pod_name,
+                            :name => name,
+                            :hostname => hostname,
+                        })
+    end
   end
 
   def user
@@ -71,5 +87,4 @@ class StatusController < ApplicationController
       end
     }
   end
-
 end
