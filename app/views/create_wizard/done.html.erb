@@ -6,10 +6,10 @@
   <!-- イメージ選択 -->
   <div class="form-group offset-md-1">
     <div class="form-inline">
-      <div class="col-md-1">
+      <div class="col-md-2">
         <label class="control-label">Image:</label>
       </div>
-      <div class="col-md-11">
+      <div class="col-md-10">
         <label class="control-label"><%= session["image-#{num}".to_sym]%></label>
       </div>
     </div>
@@ -19,10 +19,10 @@
   <!-- Podの名前 -->
   <div class="form-group offset-md-1">
     <div class="form-inline">
-      <div class="col-md-1">
+      <div class="col-md-2">
         <label class="control-label">Name:</label>
       </div>
-      <div class="col-md-11">
+      <div class="col-md-10">
         <label class="control-label"><%= session["name-#{num}".to_sym]%></label>
       </div>
     </div>
@@ -32,16 +32,68 @@
   <!-- Port -->
   <div class="form-group offset-md-1">
     <div class="form-inline">
-      <div class="col-md-1">
+      <div class="col-md-2">
         <label class="control-label">Port:</label>
       </div>
-      <div class="col-md-11">
+      <div class="col-md-10">
         <label class="control-label"><%= session["port-#{num}".to_sym]%></label>
       </div>
     </div>
-    <input value="<%= session["port-#{num}".to_sym] %>" type="hidden" name="create[<%= num %>][port]">
   </div>
   <!-- Port ここまで -->
+
+  <!-- Requests memory -->
+  <div class="form-group offset-md-1">
+    <div class="form-inline">
+      <div class="col-md-2">
+        <label class="control-label">Requests memory:</label>
+      </div>
+      <div class="col-md-10">
+        <label class="control-label"><%= "#{session["request_memory-#{num}".to_sym]} MiB" %></label>
+      </div>
+    </div>
+  </div>
+  <!-- Requests memory ここまで -->
+
+  <!-- Limits memory -->
+  <div class="form-group offset-md-1">
+    <div class="form-inline">
+      <div class="col-md-2">
+        <label class="control-label">Limits memory:</label>
+      </div>
+      <div class="col-md-10">
+        <label class="control-label"><%= "#{session["limit_memory-#{num}".to_sym]} MiB" %></label>
+      </div>
+    </div>
+  </div>
+  <!-- Limits memory ここまで -->
+
+  <!-- Requests cpu-->
+  <div class="form-group offset-md-1">
+    <div class="form-inline">
+      <div class="col-md-2">
+        <label class="control-label">Requests CPU:</label>
+      </div>
+      <div class="col-md-10">
+        <label class="control-label"><%= "#{session["request_cpu-#{num}".to_sym]}" %></label>
+      </div>
+    </div>
+  </div>
+  <!-- Requests cpu ここまで -->
+
+  <!-- Limits cpu -->
+  <div class="form-group offset-md-1">
+    <div class="form-inline">
+      <div class="col-md-2">
+        <label class="control-label">Limits CPU:</label>
+      </div>
+      <div class="col-md-10">
+        <label class="control-label"><%= "#{session["limit_cpu-#{num}".to_sym]}" %></label>
+      </div>
+    </div>
+  </div>
+  <!-- Limits cpu ここまで -->
+
   <hr>
   <% end %>
 </div>
