@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_10_161435) do
+ActiveRecord::Schema.define(version: 2019_11_28_175610) do
 
   create_table "creates", force: :cascade do |t|
     t.string "deploy"
@@ -18,6 +18,11 @@ ActiveRecord::Schema.define(version: 2019_10_10_161435) do
     t.datetime "create_time"
     t.boolean "is_delete"
     t.boolean "is_recognize"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "domains", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
