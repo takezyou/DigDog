@@ -22,15 +22,12 @@ $(window).on 'load', ->
         type: 'POST'
         data: {'deployment': id, '_method': 'DELETE'}
       .done ->
-        if e.parents('tr').length == 1
+        if e.parents('tbody').find('tr').length == 1
           $('#deploy').html('<p>対象が存在しません</p>')
         else
           e.parents('tr').remove()
       .fail ->
         alert 'エラーが発生しました。\n時間をおいてもう一度お試しください。'
-    else
-        e.preventDefault()
-
 
   $('button#delete_domain').on 'click', ->
     e = $(@)
@@ -43,15 +40,12 @@ $(window).on 'load', ->
         type: 'POST'
         data: {'domain': id, '_method': 'DELETE'}
       .done ->
-        if e.parents('tr').length == 1
+        if e.parents('tbody').find('tr').length == 1
           $('#domain').html('<p>対象が存在しません</p>')
         else
           e.parents('tr').remove()
       .fail ->
         alert 'エラーが発生しました。\n時間をおいてもう一度お試しください。'
-    else
-      e.preventDefault()
-
 
   $('button#expand').on 'click', ->
     e = $(@)
@@ -69,6 +63,4 @@ $(window).on 'load', ->
         e.parents('tr').find('button#expand').remove()
       .fail ->
         alert 'エラーが発生しました。\n時間をおいてもう一度お試しください。'
-    else
-      e.preventDefault()
   return
