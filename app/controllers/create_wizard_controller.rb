@@ -56,10 +56,18 @@ class CreateWizardController < ApplicationController
       if !deployments.include?(attribute[1]["name"])
         session["name-#{index}".to_sym] = attribute[1]["name"]
         session["port-#{index}".to_sym] = attribute[1]["port"]
+        session["request_cpu-#{index}".to_sym] = attribute[1]["request_cpu"]
+        session["request_memory-#{index}".to_sym] = attribute[1]["request_memory"]
+        session["limit_memory-#{index}".to_sym] = attribute[1]["limit_memory"]
+        session["limit_cpu-#{index}".to_sym] = attribute[1]["limit_cpu"]
         attributes.append({
           "image" => session["image-#{index}".to_sym],
           "name" => session["name-#{index}".to_sym],
-          "port" => session["port-#{index}".to_sym]
+          "port" => session["port-#{index}".to_sym],
+          "request_cpu" => session["request_cpu-#{index}".to_sym],
+          "request_memory" => session["request_memory-#{index}".to_sym],
+          "limit_cpu" => session["limit_memory-#{index}".to_sym],
+          "limit_memory" => session["limit_cpu-#{index}".to_sym]
         })
       else
         @conflict.push(attribute[1]["name"])
@@ -95,6 +103,10 @@ class CreateWizardController < ApplicationController
       name = parameter[1]["name"]
       image = parameter[1]["image"]
       port = parameter[1]["port"]
+      request_cpu = parameter[1]["request_cpu"]
+      request_memory = parameter[1]["request_memory"]
+      limit_cpu = parameter[1]["limit_cpu"]
+      limit_memory = parameter[1]["limit_memory"]
       resource = K8s::Resource.new(
         apiVersion: 'apps/v1',
         kind: 'Deployment',
@@ -125,6 +137,16 @@ class CreateWizardController < ApplicationController
               containers: [
                 name: "#{name}",
                 image: "registry.ie.u-ryukyu.ac.jp/#{image}",
+                resources: {
+                    requests: {
+                        memory: "#{request_memory}Mi",
+                        cpu: "#{request_cpu}"
+                    },
+                    limits: {
+                        memory: "#{limit_memory}Mi",
+                        cpu: "#{limit_cpu}"
+                    }
+                },
                 ports: [
                   containerPort: "#{port}".to_i
                 ]
@@ -163,6 +185,10 @@ class CreateWizardController < ApplicationController
             port: port,
             deploy: name,
             space: current_user.username,
+            request_cpu: request_cpu,
+            request_memory: request_memory,
+            limit_cpu: limit_cpu,
+            limit_memory: limit_memory,
             create_time: Time.now,
             is_delete: true,
             is_recognize: false

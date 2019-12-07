@@ -12,7 +12,8 @@ class StatusController < ApplicationController
       name = "#{hash.dig(:spec, :containers, 0, :name)}(#{hash.dig(:metadata, :name)})"
       image = "#{hash.dig(:spec, :containers, 0, :image)}"
       image.slice!(0..26)
-      port = "#{hash.dig(:spec, :containers, 0, :ports, 0, :containerPort)}"
+      service = client.api('v1').resource('services', namespace: current_user.username).get(hash.dig(:spec, :containers, 0, :name)).to_h
+      port = service.dig(:spec, :ports, 0, :nodePort)
       phase = hash.dig(:status,:phase)
       symbol = hash.dig(:status, :containerStatuses, 0, :state).keys[0].to_s
       reason = symbol == "waiting" ? hash.dig(:status, :containerStatuses, 0, :state, :waiting, :reason) : nil
@@ -59,14 +60,12 @@ class StatusController < ApplicationController
       hash = domain.to_h
       pod_name = hash.dig(:spec, :rules)[0].dig(:http, :paths)[0].dig(:backend, :serviceName)
       name = hash.dig(:metadata, :name)
-      puts name
       hostname = hash.dig(:spec, :rules)[0].dig(:host)
-
       @domains.push({
-                            :pod_name => pod_name,
-                            :name => name,
-                            :hostname => hostname,
-                        })
+        :pod_name => pod_name,
+        :name => name,
+        :hostname => hostname
+        })
     end
   end
 

@@ -10,6 +10,12 @@ div.d-flex { margin-left: auto; }
 
 div#form-content\[0\] button#minus { display: none; }
 
-div.col-md-11 > label { justify-content: unset;}
+div.col-md-2 > label { justify-content: flex-end; }
+
+div.col-md-10 > label { justify-content: unset; }
+
+div.col-md-11 > label { justify-content: unset; }
 
 div#hidden { display: none; }
+
+p#must { color: red}
