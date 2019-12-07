@@ -36,7 +36,9 @@
   </div>
   <!-- conflictした時 ここまで -->
   <% end %>
-
+  <div class="current_username">
+    <%= @user %>
+  </div>
   <%= form_with(model: @domain, url: '/setting_domain', local: true) do |f| %>
     <div class="form-group">
       <div class="form-inline">

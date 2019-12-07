@@ -30,5 +30,7 @@ Rails.application.routes.draw do
   get 'create/step3', controller: 'application', action: 'render_404'
   post 'create/step3' => 'create_wizard#step3'
   get 'create/step3', controller: 'application', action: 'render_404'
-  post 'create/done' => 'create_wizard#done'  
+  post 'create/done' => 'create_wizard#done'
+  get 'info_domain', controller: 'application', action: 'render_404'
+  post 'info_domain' => 'domain#get_deploy_data'
 end
