@@ -1,34 +1,82 @@
 <% @page_title = "ドメインの設定" %>
 
+<%= javascript_include_tag 'domain' %>
 <div class="container">
-
-  <%= form_with(model: @domain, url: '/setting_domain', local: true) do |f| %>
-
-    <div class="form-group" align="left">
-      <div class="form-inline">
-        <%= f.label :name, 'Domain name: ', class: 'control-label' %>
-        <span style="margin: 10px;"></span>
-        <%= f.text_field :name, class: 'form-control' %>
-      </div>
+  <% if @domain.errors.any? %>
+  <!-- バリデーションのエラーがあった時 -->
+    <div class="alert alert-danger" id="error_alert" >
+      <ul>
+        <% @domain.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
-
-    <div class="form-group" align="left">
-      <div class="form-inline">
-        <%= f.label :svc, 'Service name: ', class: 'control-label' %>
-        <span style="margin: 10px;"></span>
-        <%= f.text_field :svc, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="form-group" align="left">
-      <div class="form-inline">
-        <%= f.label :port, 'port number : ', class: 'control-label' %>
-        <span style="margin: 10px;"></span>
-        <%= f.text_field :port, class: 'form-control' %>
-      </div>
-    </div>
-
-    <%= f.submit "Set Domain"%>
+    <!-- バリデーションのエラーがあった時 ここまで-->
   <% end %>
 
+  <% if flash[:success] %>
+  <!-- ドメインの作成に成功した時 -->
+  <div class="alert alert-success" id="success_alert">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div align="center">
+      <%= flash[:success].html_safe? %><br>
+      現在の状態は<%= link_to "こちら", status_show_path %>で確認してください
+    </div>
+  </div>
+  <!-- ドメインの作成に成功した時 ここまで -->
+  <% end %>
+
+  <% if flash[:conflict] %>
+  <!-- conflictした時 -->
+  <div class="alert alert-danger" id="conflict_alert">
+    <div align="center">
+      <%= flash[:conflict].html_safe %><br>
+      現在の状態は<%= link_to "こちら", status_show_path %>で確認してください。
+    </div>
+  </div>
+  <!-- conflictした時 ここまで -->
+  <% end %>
+
+  <%= form_with(model: @domain, url: '/setting_domain', local: true) do |f| %>
+    <div class="form-group">
+      <div class="form-inline">
+        <div class="col-md-2">
+          <%= f.label :name, 'Domain name: ', class: 'control-label' %>
+        </div>
+        <div class="col-md-10">
+          <%= f.text_field :name, class: 'form-control' %>
+          <span class="m-1">.ns.ie.u-ryukyu.ac.jp (例: hogehoge.ns.ie.u-ryukyu.ac.jpにしたい場合、「hogehoge」と入力)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-inline">
+        <div class="col-md-2">
+          <%= f.label :svc, 'Service name: ', class: 'control-label' %>
+        </div>
+        <div class="col-md-4">
+          <%= f.select :svc, options_for_select(@deploy), {}, class: 'form-control' %>
+          <span class="m-1">(Deployment)</span>
+        </div>
+        <span class="col-md-5"></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-inline">
+        <div class="col-md-2">
+          <%= f.label :port, 'Port number : ', class: 'control-label' %>
+        </div>
+        <div class="col-md-4">
+          <%= f.text_field :port, class: 'form-control' %>
+          <span class="m-1">(ポート番号)</span>
+        </div>
+        <span class="col-md-5"></span>
+      </div>
+    </div>
+    <div class="offset-md-1">
+      <%= f.submit "Set Domain", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
 </div>
