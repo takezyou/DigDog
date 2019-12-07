@@ -27,7 +27,7 @@ class DomainController < ApplicationController
               name: "#{name}",
               namespace: current_user.username,
               annotations: {
-                  "nginx.ingress.kubernetes.io/rewrite-target": '/$1'
+                  "nginx.ingress.kubernetes.io/rewrite-target": '/'
               }
           },
           spec: {
