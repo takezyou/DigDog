@@ -3,18 +3,6 @@
 
 <%= render 'admin/nav_header', active: 'deploy' %>
 <h3>承認待ちリスト</h3>
-<!-- 検索欄 -->
-<nav class="navbar">
-  <form class="form-inline">
-    <div class="input-group">
-      <input type="text" class="form-control">
-      <div class="input-group-append">
-        <button type="button" class="btn btn-secondary">Find</button>
-      </div>
-    </div>
-  </form>
-</nav>
-<!-- 検索欄 ここまで-->
 <!-- テーブル -->
 <div class="table-responsive" id="deploy" >
   <table class="table table-striped table-sm">
@@ -31,8 +19,12 @@
     </thead>
     <tbody>
       <% @merged.each do |deploy| %>
+      <% p deploy %>
         <tr>
-          <% if deploy[4] == false && deploy[5] == true %>
+          <% if deploy[4] == true && deploy[5] == true %>
+            <!-- 未申請 -->
+            <th><div align="center"><span class="badge badge-secondary">未申請</span></div></th>
+          <% elsif deploy[4] == false && deploy[5] == true %>
             <!-- 承認済み -->
             <th><div align="center"><span class="badge badge-success">承認済み</span></div><th>
           <% elsif deploy[4] == false && deploy[5] == false %>
