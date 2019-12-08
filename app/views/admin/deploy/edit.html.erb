@@ -20,6 +20,10 @@
   <%= f.hidden_field :image, value: "#{@detail[0]}" %>
   <%= f.hidden_field :namespace,  value: "#{@create.space}" %>
   <%= f.hidden_field :is_delete, value: "#{@create.is_delete}" %>
+  <%= f.hidden_field :request_cpu, value: "#{@detail[2]}" %>
+  <%= f.hidden_field :request_memory, value: "#{@detail[4]}" %>
+  <%= f.hidden_field :limit_cpu, value: "#{@detail[3]}" %>
+  <%= f.hidden_field :limit_memory, value: "#{@detail[5]}" %>
   <!-- hidden ここまで -->
 
   <!-- Deployment-->
