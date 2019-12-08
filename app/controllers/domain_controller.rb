@@ -62,7 +62,7 @@ class DomainController < ApplicationController
   end
 
   def delete
-    domain = params[:deployment]
+    domain = params[:domain]
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
     begin
