@@ -12,7 +12,7 @@
 <!-- 成功時メッセージ ここまで -->
 <% end %>
 
-<%= form_with(model: @create, url: admin_deploy_path) do |f| %>
+<%= form_with(model: @create, url: admin_deploy_path, local: true) do |f| %>
 
   <!-- hidden -->
   <%= f.hidden_field :deployment, value: "#{@create.deploy}" %>

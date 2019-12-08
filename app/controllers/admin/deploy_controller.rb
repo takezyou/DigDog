@@ -92,9 +92,7 @@ class Admin::DeployController < ApplicationController
     end
     create.save
 
-    text = "変更しました。"
-    session[:success] = text
-    redirect_to "/admin/deploy/#{params[:id]}/edit"
+    redirect_to "/admin/deploy"
   end
 
   private
