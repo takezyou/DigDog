@@ -69,7 +69,11 @@ class Admin::DeployController < ApplicationController
     hash = client.api('apps/v1').resource('deployments', namespace: @create.space).get(@create.deploy).to_h
     image = hash.dig(:spec, :template, :spec, :containers, 0, :image)
     port = hash.dig(:spec, :template, :spec, :containers, 0, :ports, 0, :containerPort)
-    @detail = [image, port]
+    request_cpu = hash.dig(:spec, :template, :spec, :containers, 0, :resources, :requests, :cpu).slice!(/([0-9]+)m/,1)
+    limit_cpu = hash.dig(:spec, :template, :spec, :containers, 0, :resources, :limits, :cpu).slice!(/([0-9]+)m/,1)
+    request_memory = hash.dig(:spec, :template, :spec, :containers, 0, :resources, :requests, :memory).slice!(/([0-9]+)Mi/,1)
+    limit_memory = hash.dig(:spec, :template, :spec, :containers, 0, :resources, :limits, :memory).slice!(/([0-9]+)Mi/,1)
+    @detail = [image, port, request_cpu, limit_cpu, request_memory, limit_memory]
   end
 
   def update
@@ -77,6 +81,10 @@ class Admin::DeployController < ApplicationController
     create.name = params[:create][:deployment]
     create.port = params[:create][:port]
     create.image = params[:create][:image]
+    create.request_cpu = params[:create][:request_cpu]
+    create.limit_cpu = params[:create][:limit_cpu]
+    create.request_memory = params[:create][:request_memory]
+    create.limit_memory = params[:create][:limit_memory]
     if params[:create][:is_recognize] == "1"
       create.is_recognize = true
     else
@@ -84,9 +92,7 @@ class Admin::DeployController < ApplicationController
     end
     create.save
 
-    text = "変更しました。"
-    session[:success] = text
-    redirect_to "/admin/deploy/#{params[:id]}/edit"
+    redirect_to "/admin/deploy"
   end
 
   private
