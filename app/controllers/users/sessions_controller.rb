@@ -103,7 +103,7 @@ class Users::SessionsController < Devise::SessionsController
       rules: [
         {
           apiGroups: [""],
-          resources: ["pods"],
+          resources: ["pods", "pods/log","pods/exec"],
           verbs: ["get", "watch", "list"]
         }
       ]
