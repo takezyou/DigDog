@@ -4,10 +4,12 @@ class DomainController < ApplicationController
   def new
     @domain = Domain.new()
     @deploy = get_deploy()
+    @user = current_user.username
   end
 
   def create
     @domain = Domain.new(domain_params)
+    @user = current_user.username
 
     if @deploy == nil
        @deploy = get_deploy()
@@ -60,13 +62,29 @@ class DomainController < ApplicationController
   end
 
   def delete
-    domain = params[:deployment]
+    domain = params[:domain]
 
     client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
     begin
       client.api('networking.k8s.io/v1beta1').resource('ingresses', namespace: current_user.username).delete("#{domain}")
     rescue K8s::Error => e
       render :text => e.message, :status => 500
+    end
+  end
+
+  def get_deploy_data
+    deploy = params[:deployment]
+    user = params[:current_user]
+    client = K8s::Client.config(K8s::Config.load_file(File.join(Rails.root, "config", "k8s_config.yml")))
+    begin
+      deployment = client.api('apps/v1').resource('deployments', namespace: user).get(deploy).to_h
+      name = deployment.dig(:metadata, :name)
+      port = deployment.dig(:spec, :template, :spec, :containers, 0, :ports, 0, :containerPort)
+      result = {:status => "Success", :current_user => user , :name => name, :port => port}
+      render :json => result
+    rescue K8s::Error => e
+      result = {:status => "Error", :message => e.message}
+      render :json => result
     end
   end
 
