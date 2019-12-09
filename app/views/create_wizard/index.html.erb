@@ -1,6 +1,5 @@
 <% @page_title = "新規作成 | イメージ選択" %>
 
-<%= javascript_include_tag 'create_wizard/index' %>
 <div class="container">
   <h4>Step1: イメージの選択</h4>
   <%= form_with(model: @create, url: create_step2_path, local: true) do |f| %>
