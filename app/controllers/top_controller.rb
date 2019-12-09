@@ -43,7 +43,7 @@ class TopController < ApplicationController
         cpu = content.dig(:cpu)
         cpu_n_or_m = cpu.slice!(/m|n/)
         if cpu_n_or_m == "n"
-          c = cpu.to_f / 100000
+          c = cpu.to_f / 1000000
           usage_cpu += c
         elsif cpu_n_or_m == "m"
           c = cpu.to_f
