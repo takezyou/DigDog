@@ -50,10 +50,10 @@ class DomainController < ApplicationController
        begin
          client.api('networking.k8s.io/v1beta1').resource('ingresses', namespace: current_user.username).create_resource(resource)
 
-         flash.now[:success] = "ドメイン #{name}.ie.u-ryukyu.ac.jp を作成しました"
+         flash.now[:success] = "ドメイン #{name}.ns.ie.u-ryukyu.ac.jp を作成しました"
          render 'domain/new', group: @deploy
        rescue K8s::Error::Conflict => e
-         flash.now[:conflict] = "ドメイン #{name}.ie.u-ryukyu.ac.jp は既に存在しています"
+         flash.now[:conflict] = "ドメイン #{name}.ns.ie.u-ryukyu.ac.jp は既に存在しています"
          render 'domain/new', group: @deploy
        end
     else
