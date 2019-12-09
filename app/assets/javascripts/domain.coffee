@@ -4,7 +4,7 @@
 
 $(window).on 'load', ->
   if document.getElementById("success_alert") != null
-    $('select#create_image').find('option:selected').prop('selected', false);
-    $('input#create_name').val('');
-    $('input#create_port').val('');
+    $('select#domain_svc').find('option:selected').prop('selected', false);
+    $('input#domain_name').val('');
+    $('input#domain_port').val('');
   return

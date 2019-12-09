@@ -1,4 +1,7 @@
 class Create < ApplicationRecord
+  attr_accessor :image, :name, :port
+  has_many :forms
+  accepts_nested_attributes_for :forms
   attr_accessor :image, :name, :port, :request_memory, :limit_memory, :request_cpu, :limit_cpu
 
   validates :image, presence: true

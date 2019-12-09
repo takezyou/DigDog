@@ -1,0 +1,147 @@
+<% @page_title = "新規作成 | 必要事項の入力" %>
+
+<%= javascript_include_tag 'create_wizard/step2' %>
+<div class="container">
+  <h4>Step2: 必要事項の入力</h4>
+  <div id="hidden"><%= session[:count] %></div>
+  <% if @results.present? %>
+  <!-- バリデーションのエラーがあった時 -->
+  <div id="error_explanation" class="alert alert-danger">
+    <% @results.each do |key,value| %>
+    Deploymet<%= key %>
+    <ul>
+      <% value.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+    <% end %>
+  </div>
+  <!-- バリデーションのエラーがあった時 ここまで-->
+  <% end %>
+  <% if @conflict.present? %>
+  <!-- conflictしたとき  -->
+  <div class="alert alert-danger">
+    Conflictが発生しました。<br>以下の名前のDeploymentは既に存在します。
+    <ul>
+    <% @conflict.each do |conflict| %>
+      <li><%= conflict %></li>
+    <% end %>
+    </ul>
+  </div>
+  <!-- conflictしたとき ここまで -->
+  <% end %>
+  <%= form_with(model: @create, url: create_step3_path, local: true) do |f| %>
+    <p id="must">※全て必須項目です</p>
+    <% for num in 0..(session[:count].to_i - 1) do %>
+      <h5 class="col-12">Deploymet<%= num %></h5>
+      <!-- イメージ選択 -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :image, 'Image:', :class => 'control-label' %>
+          </div>
+          <div class="col-md-10">
+            <%= f.label :image_name, session["image-#{num}".to_sym] %>
+          </div>
+        </div>
+      </div>
+      <!-- イメージ選択 ここまで -->
+
+      <!-- Podの名前 -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :name, 'Name:', class: 'control-label' %>
+          </div>
+          <div class="col-md-5">
+            <input class="form-control" type="text" name="create[<%= num %>][name]" id="create_name">
+            <span class="m-1">(Deploymetの名前)</span>
+          </div>
+          <span class="col-md-4"></span>
+        </div>
+      </div>
+      <!-- Podの名前 ここまで -->
+
+      <!-- Port -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :port, 'Port:', class: 'control-label' %>
+          </div>
+          <div class="col-md-5">
+            <input class="form-control" type="tel" name="create[<%= num %>][port]" id="create_port">
+            <span class="m-1">(コンテナの公開用ポート)</span>
+          </div>
+          <span class="col-md-4"></span>
+        </div>
+      </div>
+      <!-- Port ここまで -->
+
+      <!-- Requests memory -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :request_memory, 'Requests memory: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-7">
+            <input class="form-control" type="tel" name="create[<%= num %>][request_memory]" id="create_request_memory">
+            <span class="m-1">MiB (必要最低限欲しいメモリの容量 例: 500MiB)</span>
+          </div>
+          <span class="col-md-2"></span>
+        </div>
+      </div>
+      <!-- Requests memory ここまで -->
+
+      <!-- Limits memory -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :port, 'Limits memory: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-7">
+            <input class="form-control" type="tel" name="create[<%= num %>][limit_memory]" id="create_limit_memory">
+            <span class="m-1">MiB (これ以上は割り当てたくないメモリの容量)</span>
+          </div>
+          <span class="col-md-2"></span>
+        </div>
+      </div>
+      <!-- Limits memory ここまで -->
+
+      <!-- Requests cpu-->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :request_cpu, 'Requests CPU: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-8">
+            <input class="form-control" type="tel" name="create[<%= num %>][request_cpu]" id="create_request_cpu">
+            <span class="m-1">(必要最低限欲しいCPUのコア数を1000で割った値 例: 0.1)</span>
+          </div>
+          <span class="col-md-1"></span>
+        </div>
+      </div>
+      <!-- Requests cpu ここまで -->
+
+      <!-- Limits cpu -->
+      <div class="form-group offset-md-1">
+        <div class="form-inline">
+          <div class="col-md-2">
+            <%= f.label :limit_cpu, 'Limits CPU: ', class: 'control-label' %>
+          </div>
+          <div class="col-md-8">
+            <input class="form-control" type="tel" name="create[<%= num %>][limit_cpu]" id="create_limit_cpu">
+            <span class="m-1">(これ以上は割り当てたくないCPUのコア数を1000で割った値)</span>
+          </div>
+          <span class="col-md-1"></span>
+        </div>
+      </div>
+      <!-- Limits cpu ここまで -->
+
+      <hr>
+    <% end %>
+    <div class="form-inline">
+      <a href="<%= create_path %>" class="btn btn-primary" role="button">戻る</a>
+      <%= f.submit "次へ", class: "btn btn-primary ml-auto" %>
+    </div>
+  <% end %>
+</div>
