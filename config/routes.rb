@@ -13,10 +13,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root "top#index"
   get 'status/show'
-  get 'status/user'
   get 'config/index'
-  # get 'create' => 'create#new'
-  # post 'create' => 'deploy#create'
   get 'delete', controller: 'application', action: 'render_404'
   delete 'delete' => 'deploy#delete'
   get 'setting_domain' => 'domain#new'
@@ -30,5 +27,7 @@ Rails.application.routes.draw do
   get 'create/step3', controller: 'application', action: 'render_404'
   post 'create/step3' => 'create_wizard#step3'
   get 'create/step3', controller: 'application', action: 'render_404'
-  post 'create/done' => 'create_wizard#done'  
+  post 'create/done' => 'create_wizard#done'
+  get 'info_domain', controller: 'application', action: 'render_404'
+  post 'info_domain' => 'domain#get_deploy_data'
 end

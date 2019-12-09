@@ -19,7 +19,7 @@
   <div class="alert alert-success" id="success_alert">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <div align="center">
-      <%= flash[:success].html_safe? %><br>
+      <%= flash[:success] %><br>
       現在の状態は<%= link_to "こちら", status_show_path %>で確認してください
     </div>
   </div>
@@ -36,7 +36,9 @@
   </div>
   <!-- conflictした時 ここまで -->
   <% end %>
-
+  <div class="current_username">
+    <%= @user %>
+  </div>
   <%= form_with(model: @domain, url: '/setting_domain', local: true) do |f| %>
     <div class="form-group">
       <div class="form-inline">

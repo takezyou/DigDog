@@ -29,7 +29,6 @@ class TopController < ApplicationController
     usage_cpu = 0
     pods_top_list.each do |top|
       used = top.to_h
-      puts used
       if used.dig(:containers, 0)
         content = used.dig(:containers, 0, :usage)
         memory = content.dig(:memory)
@@ -42,13 +41,19 @@ class TopController < ApplicationController
           usage_memory += m
         end
         cpu = content.dig(:cpu)
-        milli = cpu.slice!(/m/).to_f
-        usage_cpu += milli
+        cpu_n_or_m = cpu.slice!(/m|n/)
+        if cpu_n_or_m == "n"
+          c = cpu.to_f / 1000000
+          usage_cpu += c
+        elsif cpu_n_or_m == "m"
+          c = cpu.to_f
+          usage_cpu += c
+        end
       end
     end
     @usage_memory = "#{usage_memory}Mi"
     @usage_cpu = "#{usage_cpu}m"
     @graph_usage_memory = (usage_memory / (@limits_memory.to_f * 1000)) * 100
-    @graph_usage_cpu = (usage_cpu / @limits_cpu.to_f) * 100
+    @graph_usage_cpu = (usage_cpu / (@limits_cpu.to_f * 1000)) * 100
   end
 end
